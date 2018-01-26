@@ -22,25 +22,30 @@ Particle::Particle(Vec3D init_pos)
   color = Vec3D();
 }
 
+Particle::~Particle()
+{
+  
+}
+
 /*----------------------------*/
 // SETTERS
 /*----------------------------*/
-Particle::setPos(Vec3D p)
+void Particle::setPos(Vec3D p)
 {
   pos = p;
 }
 
-Particle::setVel(Vec3D v)
+void Particle::setVel(Vec3D v)
 {
   vel = v;
 }
 
-Particle::setPos(Vec3D a)
+void Particle::setAcc(Vec3D a)
 {
   acc = a;
 }
 
-Particle::setPos(Vec3D c)
+void Particle::setColor(Vec3D c)
 {
   color = c;
 }
