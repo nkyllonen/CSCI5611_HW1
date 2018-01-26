@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
 	cam->setRight(Vec3D(1, 0, 0));				//look along +z
 
 	/////////////////////////////////
-	//BUILD VAO + VBO + SHADERS + TEXTURES
+	//VAO + VBO + SHADERS + TEXTURES
 	/////////////////////////////////
 	if (!myWorld->setupGraphics())
 	{

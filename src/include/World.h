@@ -28,12 +28,12 @@
 #include "Vec3D.h"
 #include "Camera.h"
 #include "Util.h"
+#include "Particle.h"
 
 class World{
 private:
 	int width;
 	int height;
-	int num_objects;
 
 	int total_verts;
 	float* modelData;
@@ -53,10 +53,13 @@ private:
 	GLuint tex0;
 	GLuint tex1;
 
+	//what lives in this world
+	Particle p;
+
 public:
 	//CONSTRUCTORS AND DESTRUCTORS
 	World();
-	World(int w, int h, int num);
+	World(int w, int h);
 	~World();
 
 	//SETTERS

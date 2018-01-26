@@ -10,13 +10,14 @@ World::World()
 {
 	width = 0;
 	height = 0;
+	p = Particle();
 }
 
-World::World(int w, int h, int num)
+World::World(int w, int h)
 {
 	width = w;
 	height = h;
-	num_objects = num;
+	p = Particle();
 }
 
 World::~World()
