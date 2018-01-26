@@ -99,6 +99,7 @@ int main(int argc, char *argv[]) {
 	/////////////////////////////////
 	if (!myWorld->setupGraphics())
 	{
+		cout << "ERROR. Unable to setup Graphics." << endl;
 		//Clean Up
 		SDL_GL_DeleteContext(context);
 		SDL_Quit();
@@ -114,6 +115,11 @@ int main(int argc, char *argv[]) {
 	SDL_Event windowEvent;
 	bool quit = false;
 	bool complete = false;
+	float last_time = 0;
+	float delta_time = 0;
+	float new_time = 0;
+
+	myWorld->initParticles();
 
 	while (!quit && !complete)
 	{
@@ -132,12 +138,17 @@ int main(int argc, char *argv[]) {
 			default:
 				break;
 			}//END polling switch
-
 			SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0); //Set to full screen
 		}//END polling If
 
 		//draw all WObjs
 		myWorld->draw(cam);
+
+		//delta_time is in seconds
+		new_time = SDL_GetTicks();
+		delta_time = (new_time - last_time) / 1000.0;
+		last_time = new_time;
+		myWorld->updateParticles(delta_time);
 
 		SDL_GL_SwapWindow(window);
 
@@ -207,7 +218,8 @@ bool onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	////////////////////////////////
 	case SDLK_SPACE:
 	{
-
+		printf("Spacebar pressed - spawned new particle\n");
+		myWorld->spawnParticles();
 		break;
 	}
 	default:

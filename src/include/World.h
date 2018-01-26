@@ -54,7 +54,7 @@ private:
 	GLuint tex1;
 
 	//what lives in this world
-	Particle p;
+	Particle* p;
 
 public:
 	//CONSTRUCTORS AND DESTRUCTORS
@@ -74,6 +74,9 @@ public:
 	bool loadModelData();
 	bool setupGraphics();
 	void draw(Camera * cam);
+	void initParticles();
+	void updateParticles(float dt);
+	void spawnParticles();
 
 };
 

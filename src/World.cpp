@@ -10,19 +10,22 @@ World::World()
 {
 	width = 0;
 	height = 0;
-	p = Particle();
+	p = new Particle(Vec3D(0,5,0));
+	total_verts = 0;
 }
 
 World::World(int w, int h)
 {
 	width = w;
 	height = h;
-	p = Particle();
+	p = new Particle(Vec3D(0,5,0));
+	total_verts = 0;
 }
 
 World::~World()
 {
 	delete[] modelData;
+	p->~Particle();
 	//delete floor;
 }
 
@@ -82,6 +85,7 @@ bool World::loadModelData()
 	/////////////////////////////////
 	if (!(cubeData != nullptr && sphereData != nullptr))
 	{
+		cout << "ERROR. Failed to load model(s)" << endl;
 		delete[] cubeData;
 		delete[] sphereData;
 		return false;
@@ -104,6 +108,7 @@ bool World::setupGraphics()
 	//This stores the VBO and attribute mappings in one object
 	glGenVertexArrays(1, &vao); //Create a VAO
 	glBindVertexArray(vao); //Bind the above created VAO to the current context
+	cout << "VAO bound to current context" << endl;
 
 	/////////////////////////////////
 	//BUILD VERTEX BUFFER OBJECT
@@ -112,6 +117,7 @@ bool World::setupGraphics()
 	glGenBuffers(1, vbo);  //Create 1 buffer called vbo
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]); //Set the vbo as the active array buffer (Only one buffer can be active at a time)
 	glBufferData(GL_ARRAY_BUFFER, total_verts * 8 * sizeof(float), modelData, GL_STATIC_DRAW); //upload vertices to vbo
+	cout << "VBO setup with model data" << endl;
 
 	/////////////////////////////////
 	//SETUP SHADERS
@@ -124,7 +130,7 @@ bool World::setupGraphics()
 
 	if (tex0 == -1 || tex1 == -1 || shaderProgram == -1)
 	{
-		cout << "\nCan't load texture(s)" << endl;
+		cout << "\nERROR. Failed to load texture(s)" << endl;
 		printf(strerror(errno));
 		return false;
 	}
@@ -193,6 +199,52 @@ void World::draw(Camera * cam)
 
 	glUniform1i(uniTexID, 1); //Set texture ID to use for floor (1 = brick texture)
 	floor->draw(cam, shaderProgram);*/
+
+	glUniform1i(uniTexID, -1); //Set texture ID to use (0 = wood texture, -1 = no texture)
+	p->draw(cam, shaderProgram);
+}
+
+//
+void World::initParticles()
+{
+	p->setVel(Vec3D(0,0,0));
+	p->setAcc(Vec3D(0,-9.8,0));
+
+	//green sphere
+	Material mat = Material();
+	mat.setAmbient(glm::vec3(0, 1, 0));
+	mat.setDiffuse(glm::vec3(0, 1, 0));
+	mat.setSpecular(glm::vec3(0.75, 0.75, 0.75));
+	p->setMaterial(mat);
+
+	p->setVertexInfo(SPHERE_START, SPHERE_VERTS);
+}
+
+//
+void World::updateParticles(float dt)
+{
+	Vec3D pos = p->getPos();
+	Vec3D vel = p->getVel();
+	Vec3D acc = p->getAcc();
+
+	//cout << "\tdt = " << dt << "\t pos: ";
+	//pos.print();
+
+	//temp
+	Vec3D temp_pos = pos + (dt*vel);
+	Vec3D temp_vel = vel + (dt * acc);
+
+	p->setPos(temp_pos);
+	p->setVel(temp_vel);
+}
+
+//
+void World::spawnParticles()
+{
+	p->~Particle();
+
+	p = new Particle(Vec3D(0,5,0));
+	initParticles();
 }
 
 /*----------------------------*/
