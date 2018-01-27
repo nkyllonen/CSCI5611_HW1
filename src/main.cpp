@@ -1,6 +1,7 @@
 //////////////////////////////////
 //CSCI 5611 HW1 - Particle System
 //Nikki Kyllonen - kyllo089
+//Emma Lacroix - lacro058
 //////////////////////////////////
 
 #ifdef __APPLE__
@@ -70,7 +71,7 @@ const float step_size = 0.25f;
 /*=============================*/
 // Helper Functions
 /*=============================*/
-bool onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld);
+void onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld);
 
 /*==============================================================*/
 //							  MAIN
@@ -110,7 +111,7 @@ int main(int argc, char *argv[]) {
 	/////////////////////////////////
 	Camera* cam = new Camera();
 	cam->setDir(Vec3D(0, 0, 1));					//look along +z
-	cam->setPos(Vec3D(0,0,-5));						//start
+	cam->setPos(Vec3D(0,1,-5));						//start
 	cam->setUp(Vec3D(0, 1, 0));						//map is in xz plane
 	cam->setRight(Vec3D(1, 0, 0));				//look along +z
 
@@ -134,14 +135,14 @@ int main(int argc, char *argv[]) {
 	===========================================================================================*/
 	SDL_Event windowEvent;
 	bool quit = false;
-	bool complete = false;
 	float last_time = 0;
 	float delta_time = 0;
 	float new_time = 0;
 
+	//myWorld->setFloor(0.0f);
 	myWorld->initParticles();
 
-	while (!quit && !complete)
+	while (!quit)
 	{
 		if (SDL_PollEvent(&windowEvent)) {
 			switch (windowEvent.type) //event type -- key up or down
@@ -153,7 +154,7 @@ int main(int argc, char *argv[]) {
 				//check for escape or fullscreen before checking other commands
 				if (windowEvent.key.keysym.sym == SDLK_ESCAPE) quit = true; //Exit event loop
 				else if (windowEvent.key.keysym.sym == SDLK_f) fullscreen = !fullscreen;
-				complete = onKeyUp(windowEvent.key, cam, myWorld);
+				onKeyUp(windowEvent.key, cam, myWorld);
 				break;
 			default:
 				break;
@@ -187,7 +188,7 @@ int main(int argc, char *argv[]) {
 // onKeyUp : determine which key was pressed and how to edit
 //				current translation or rotation parameters
 /*--------------------------------------------------------------*/
-bool onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
+void onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 {
 	Vec3D pos = cam->getPos();
 	Vec3D dir = cam->getDir();
@@ -249,5 +250,5 @@ bool onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	cam->setDir(temp_dir);
 	cam->setRight(temp_right);
 	cam->setPos(temp_pos);
-	return false;
+	return;
 }//END onKeyUp

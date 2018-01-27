@@ -14,6 +14,7 @@ World::World()
 {
 	width = 0;
 	height = 0;
+	floor = 0.0f;
 	p = new Particle(Vec3D(0,5,0));
 	total_verts = 0;
 }
@@ -22,6 +23,7 @@ World::World(int w, int h)
 {
 	width = w;
 	height = h;
+	floor = 0.0f;
 	p = new Particle(Vec3D(0,5,0));
 	total_verts = 0;
 }
@@ -46,6 +48,11 @@ void World::setSphereIndices(int start, int tris)
 {
 	SPHERE_START = start;
 	SPHERE_VERTS = tris;
+}
+
+void World::setFloor(float f)
+{
+	floor = f;
 }
 
 /*----------------------------*/
@@ -143,7 +150,7 @@ bool World::setupGraphics()
 	//load in textures
 	#ifdef __APPLE__
 	tex0 = util::LoadTexture("../textures/wood.bmp");
-	tex1 = util::LoadTexture("../textures/wood.bmp");
+	tex1 = util::LoadTexture("../textures/grey_stones.bmp");
 	#else
 	tex0 = util::LoadTexture("textures/wood.bmp");
 	tex1 = util::LoadTexture("textures/grey_stones.bmp");
@@ -253,7 +260,15 @@ void World::updateParticles(float dt)
 
 	//temp
 	Vec3D temp_pos = pos + (dt*vel);
-	Vec3D temp_vel = vel + (dt * acc);
+	Vec3D temp_vel;
+	if (temp_pos.getY() > floor)
+	{
+		temp_vel = vel + (dt * acc);
+	} else 
+	{
+		temp_vel = -0.75 * vel;
+		temp_pos = pos + (dt*temp_vel);
+	}
 
 	p->setPos(temp_pos);
 	p->setVel(temp_vel);
