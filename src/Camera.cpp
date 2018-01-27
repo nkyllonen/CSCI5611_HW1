@@ -1,4 +1,8 @@
+#ifdef __APPLE__
+#include "include/Camera.h"
+#else
 #include "Camera.h"
+#endif
 
 #define _USE_MATH_DEFINES
 #include <math.h>

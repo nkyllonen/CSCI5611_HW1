@@ -1,4 +1,8 @@
+#ifdef __APPLE__
+#include "include/Particle.h"
+#else
 #include "Particle.h"
+#endif
 
 using namespace std;
 

@@ -1,4 +1,8 @@
+#ifdef __APPLE__
+#include "include/World.h"
+#else
 #include "World.h"
+#endif
 
 using namespace std;
 
@@ -68,14 +72,22 @@ bool World::loadModelData()
 	/////////////////////////////////
 	//CUBE
 	int CUBE_VERTS = 0;
+	#ifdef __APPLE__
+	float* cubeData = util::loadModel("../models/cube.txt", CUBE_VERTS);
+	#else
 	float* cubeData = util::loadModel("models/cube.txt", CUBE_VERTS);
+	#endif
 	cout << "\nNumber of vertices in cube model : " << CUBE_VERTS << endl;
 	total_verts += CUBE_VERTS;
 	setCubeIndices(0, CUBE_VERTS);
 
 	//SPHERE
 	int SPHERE_VERTS = 0;
+	#ifdef __APPLE__
+	float* sphereData = util::loadModel("../models/sphere.txt", SPHERE_VERTS);
+	#else
 	float* sphereData = util::loadModel("models/sphere.txt", SPHERE_VERTS);
+	#endif
 	cout << "\nNumber of vertices in sphere model : " << SPHERE_VERTS << endl;
 	total_verts += SPHERE_VERTS;
 	setSphereIndices(CUBE_VERTS, SPHERE_VERTS);
@@ -122,11 +134,20 @@ bool World::setupGraphics()
 	/////////////////////////////////
 	//SETUP SHADERS
 	/////////////////////////////////
+	#ifdef __APPLE__
+	shaderProgram = util::LoadShader("../Shaders/phongTex.vert", "../Shaders/phongTex.frag");
+	#else
 	shaderProgram = util::LoadShader("Shaders/phongTex.vert", "Shaders/phongTex.frag");
+	#endif
 
 	//load in textures
+	#ifdef __APPLE__
+	tex0 = util::LoadTexture("../textures/wood.bmp");
+	tex1 = util::LoadTexture("../textures/wood.bmp");
+	#else
 	tex0 = util::LoadTexture("textures/wood.bmp");
 	tex1 = util::LoadTexture("textures/grey_stones.bmp");
+	#endif
 
 	if (tex0 == -1 || tex1 == -1 || shaderProgram == -1)
 	{

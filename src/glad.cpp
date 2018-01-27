@@ -354,7 +354,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef __APPLE__
+#include "include/glad.h"
+#else
 #include "glad.h"
+#endif
 
 static void* get_proc(const char *namez);
 

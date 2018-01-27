@@ -1,4 +1,8 @@
+#ifdef __APPLE__
+#include "include/Vec3D.h"
+#else
 #include "Vec3D.h"
+#endif
 
 #include <cmath>
 #include <iostream>
