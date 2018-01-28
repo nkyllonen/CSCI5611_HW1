@@ -1,4 +1,8 @@
+#ifdef __APPLE__
+#include "include/Util.h"
+#else
 #include "Util.h"
+#endif
 
 /*--------------------------------------------------------------*/
 // initSDL : initializes SDL and returns window pointer

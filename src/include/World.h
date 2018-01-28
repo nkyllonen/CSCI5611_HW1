@@ -15,9 +15,15 @@
 #endif
 
 #define GLM_FORCE_RADIANS
+#ifdef __APPLE__
+#include "../../ext/glm/glm.hpp"
+#include "../../ext/glm/gtc/matrix_transform.hpp"
+#include "../../ext/glm/gtc/type_ptr.hpp"
+#else
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+#endif
 
 #include <cstdlib>
 #include <cstdio>
@@ -54,6 +60,7 @@ private:
 	GLuint tex1;
 
 	//what lives in this world
+	float floor; //y coord. of floor
 	Particle* p;
 
 public:
@@ -65,6 +72,7 @@ public:
 	//SETTERS
 	void setCubeIndices(int start, int tris);
 	void setSphereIndices(int start, int tris);
+	void setFloor(float f);
 
 	//GETTERS
 	int getWidth();

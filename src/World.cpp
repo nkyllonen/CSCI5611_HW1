@@ -1,4 +1,8 @@
+#ifdef __APPLE__
+#include "include/World.h"
+#else
 #include "World.h"
+#endif
 
 using namespace std;
 
@@ -10,6 +14,7 @@ World::World()
 {
 	width = 0;
 	height = 0;
+	floor = 0.0f;
 	p = new Particle(Vec3D(0,5,0));
 	total_verts = 0;
 }
@@ -18,6 +23,7 @@ World::World(int w, int h)
 {
 	width = w;
 	height = h;
+	floor = 0.0f;
 	p = new Particle(Vec3D(0,5,0));
 	total_verts = 0;
 }
@@ -44,6 +50,11 @@ void World::setSphereIndices(int start, int tris)
 	SPHERE_VERTS = tris;
 }
 
+void World::setFloor(float f)
+{
+	floor = f;
+}
+
 /*----------------------------*/
 // GETTERS
 /*----------------------------*/
@@ -68,14 +79,22 @@ bool World::loadModelData()
 	/////////////////////////////////
 	//CUBE
 	int CUBE_VERTS = 0;
+	#ifdef __APPLE__
+	float* cubeData = util::loadModel("../models/cube.txt", CUBE_VERTS);
+	#else
 	float* cubeData = util::loadModel("models/cube.txt", CUBE_VERTS);
+	#endif
 	cout << "\nNumber of vertices in cube model : " << CUBE_VERTS << endl;
 	total_verts += CUBE_VERTS;
 	setCubeIndices(0, CUBE_VERTS);
 
 	//SPHERE
 	int SPHERE_VERTS = 0;
+	#ifdef __APPLE__
+	float* sphereData = util::loadModel("../models/sphere.txt", SPHERE_VERTS);
+	#else
 	float* sphereData = util::loadModel("models/sphere.txt", SPHERE_VERTS);
+	#endif
 	cout << "\nNumber of vertices in sphere model : " << SPHERE_VERTS << endl;
 	total_verts += SPHERE_VERTS;
 	setSphereIndices(CUBE_VERTS, SPHERE_VERTS);
@@ -122,11 +141,20 @@ bool World::setupGraphics()
 	/////////////////////////////////
 	//SETUP SHADERS
 	/////////////////////////////////
+	#ifdef __APPLE__
+	shaderProgram = util::LoadShader("../Shaders/phongTex.vert", "../Shaders/phongTex.frag");
+	#else
 	shaderProgram = util::LoadShader("Shaders/phongTex.vert", "Shaders/phongTex.frag");
+	#endif
 
 	//load in textures
+	#ifdef __APPLE__
+	tex0 = util::LoadTexture("../textures/wood.bmp");
+	tex1 = util::LoadTexture("../textures/grey_stones.bmp");
+	#else
 	tex0 = util::LoadTexture("textures/wood.bmp");
 	tex1 = util::LoadTexture("textures/grey_stones.bmp");
+	#endif
 
 	if (tex0 == -1 || tex1 == -1 || shaderProgram == -1)
 	{
@@ -232,7 +260,15 @@ void World::updateParticles(float dt)
 
 	//temp
 	Vec3D temp_pos = pos + (dt*vel);
-	Vec3D temp_vel = vel + (dt * acc);
+	Vec3D temp_vel;
+	if (temp_pos.getY() > floor)
+	{
+		temp_vel = vel + (dt * acc);
+	} else 
+	{
+		temp_vel = -0.75 * vel;
+		temp_pos = pos + (dt*temp_vel);
+	}
 
 	p->setPos(temp_pos);
 	p->setVel(temp_vel);

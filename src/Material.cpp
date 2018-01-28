@@ -1,4 +1,8 @@
+#ifdef __APPLE__
+#include "include/Material.h"
+#else
 #include "Material.h"
+#endif
 
 
 /*----------------------------*/
