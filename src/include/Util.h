@@ -38,9 +38,6 @@
 
 using namespace std;
 
-// Change at will. Lower means smoother, but higher values respond faster.
-const float alpha = 0.2;
-
 namespace util
 {
 	//
@@ -59,10 +56,6 @@ namespace util
 
 	//
 	GLuint LoadTexture(const char* texFile);
-
-	//Weighted Average FPS calculations taken from:
-	//http://sdl.beuc.net/sdl.wiki/SDL_Average_FPS_Measurement
-	float calcFPS(float& frametimelast);
 
 }
 

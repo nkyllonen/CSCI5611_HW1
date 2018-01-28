@@ -135,9 +135,11 @@ int main(int argc, char *argv[]) {
 	===========================================================================================*/
 	SDL_Event windowEvent;
 	bool quit = false;
-	float last_time = 0;
-	float delta_time = 0;
-	float new_time = 0;
+	float last_time = SDL_GetTicks(),	delta_time = 0,	new_time = 0;
+
+	//FPS calculations
+	float framecount = 0;
+	float fps = 0, last_fps_print = 0.0;
 
 	//myWorld->setFloor(0.0f);
 	myWorld->initParticles();
@@ -162,7 +164,7 @@ int main(int argc, char *argv[]) {
 			SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0); //Set to full screen
 		}//END polling If
 
-		//draw all WObjs
+		//draw entire world
 		myWorld->draw(cam);
 
 		//delta_time is in seconds so convert ticks (ms) by * 1000
@@ -171,8 +173,16 @@ int main(int argc, char *argv[]) {
 		last_time = new_time;
 		myWorld->updateParticles(delta_time);
 
-		SDL_GL_SwapWindow(window);
+		if ((new_time - last_fps_print) / 1000.0 >= 1.0) //only print every 1+ seconds
+		{
+			fps = framecount;
+			last_fps_print = new_time;
+			printf("FPS: %f\n", fps);
+			framecount = 0;
+		}
 
+		SDL_GL_SwapWindow(window);
+		framecount++;
 	}//END looping While
 
 	//Clean Up

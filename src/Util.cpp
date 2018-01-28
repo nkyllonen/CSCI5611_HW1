@@ -11,6 +11,8 @@ SDL_Window* util::initSDL(SDL_GLContext& context, float width, float height)
 {
 	SDL_Init(SDL_INIT_VIDEO);  //Initialize Graphics (for OpenGL)
 
+	SDL_GL_SetSwapInterval(0); //Disable vsync //https://wiki.libsdl.org/SDL_GL_SetSwapInterval
+
 	//Ask SDL to get a recent version of OpenGL (3.2 or greater)
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -212,20 +214,4 @@ GLuint util::LoadTexture(const char * texFile)
 	SDL_FreeSurface(surface);
 
 	return tex;
-}
-
-//Weight Average FPS
-float util::calcFPS(float& frametimelast)
-{
-	Uint32 getticks, frametimedelta;
-	float frametime;
-
-	getticks = SDL_GetTicks();
-	frametimedelta = getticks - frametimelast;
-	frametimelast = getticks; //passed by reference so that value is updated
-
-	// This is the important part:
-	frametime = alpha * frametimedelta + (1.0 - alpha) * frametime;
-
-	return 1000.0 / frametime;
 }
