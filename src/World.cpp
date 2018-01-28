@@ -262,7 +262,7 @@ void World::updateParticles(float dt)
 	Vec3D temp_pos = pos + (dt*vel);
 	Vec3D temp_vel;
 
-	float error = 0.02;
+	float error = 0.02, damping = -0.70;
 
 	if (temp_pos.getY() > floor)
 	{
@@ -272,11 +272,11 @@ void World::updateParticles(float dt)
 	{
 		if (abs(temp_pos.getY() - pos.getY()) > error)
 		{
-			temp_vel = -0.70 * vel;
+			temp_vel = damping * vel;
 		}
 		else //kill tiny bounces
 		{
-			temp_vel = -0.25 * vel;
+			temp_vel = 0.5*damping * vel;
 		}
 		temp_pos = pos + (dt*temp_vel);
 	}
