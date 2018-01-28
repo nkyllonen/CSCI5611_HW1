@@ -209,3 +209,19 @@ GLuint util::LoadTexture(const char * texFile)
 
 	return tex;
 }
+
+//Weight Average FPS
+float util::calcFPS(float& frametimelast)
+{
+	Uint32 getticks, frametimedelta;
+	float frametime;
+
+	getticks = SDL_GetTicks();
+	frametimedelta = getticks - frametimelast;
+	frametimelast = getticks; //passed by reference so that value is updated
+
+	// This is the important part:
+	frametime = alpha * frametimedelta + (1.0 - alpha) * frametime;
+
+	return 1000.0 / frametime;
+}

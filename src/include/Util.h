@@ -32,6 +32,9 @@
 
 using namespace std;
 
+// Change at will. Lower means smoother, but higher values respond faster.
+const float alpha = 0.2;
+
 namespace util
 {
 	//
@@ -48,7 +51,13 @@ namespace util
 	//http://www.nexcius.net/2012/11/20/how-to-load-a-glsl-shader-in-opengl-using-c/
 	GLuint LoadShader(const char *vertex_path, const char *fragment_path);
 
+	//
 	GLuint LoadTexture(const char* texFile);
+
+	//Weighted Average FPS calculations taken from:
+	//http://sdl.beuc.net/sdl.wiki/SDL_Average_FPS_Measurement
+	float calcFPS(float& frametimelast);
+
 }
 
 #endif

@@ -144,7 +144,7 @@ int main(int argc, char *argv[]) {
 		//draw all WObjs
 		myWorld->draw(cam);
 
-		//delta_time is in seconds
+		//delta_time is in seconds so convert ticks (ms) by * 1000
 		new_time = SDL_GetTicks();
 		delta_time = (new_time - last_time) / 1000.0;
 		last_time = new_time;
