@@ -84,7 +84,7 @@ public:
 	bool setupGraphics();
 	void draw(Camera * cam);
 	void createFloorData();
-	void drawFloor(Camera * cam);
+	void drawFloor();
 	void initParticles();
 	void updateParticles(float dt);
 	void spawnParticles();

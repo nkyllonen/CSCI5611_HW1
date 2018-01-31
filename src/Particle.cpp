@@ -97,7 +97,7 @@ Vec3D Particle::getSize()
 /*----------------------------*/
 // OTHERS
 /*----------------------------*/
-void Particle::draw(Camera* cam, GLuint shaderProgram)
+void Particle::draw(GLuint shaderProgram)
 {
   GLint uniModel = glGetUniformLocation(shaderProgram, "model");
 

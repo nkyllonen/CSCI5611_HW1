@@ -229,10 +229,10 @@ void World::draw(Camera * cam)
 	floor->draw(cam, shaderProgram);*/
 
 	//draw floor
-	drawFloor(cam);
+	drawFloor();
 
 	glUniform1i(uniTexID, -1); //Set texture ID to use (0 = wood texture, -1 = no texture)
-	p->draw(cam, shaderProgram);
+	p->draw(shaderProgram);
 }
 
 //
@@ -247,7 +247,7 @@ void World::createFloorData()
 }
 
 //
-void World::drawFloor(Camera * cam)
+void World::drawFloor()
 {
 	//Not sure how to make this function, should be similar in effect
 	//to draw function in particle class

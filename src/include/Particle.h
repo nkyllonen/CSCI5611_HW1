@@ -39,7 +39,7 @@ public:
   Vec3D getSize();
 
   //OTHERS
-  void draw(Camera* cam, GLuint shaderProgram);
+  void draw(GLuint shaderProgram);
 
 };
 
