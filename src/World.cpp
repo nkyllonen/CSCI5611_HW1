@@ -228,8 +228,35 @@ void World::draw(Camera * cam)
 	glUniform1i(uniTexID, 1); //Set texture ID to use for floor (1 = brick texture)
 	floor->draw(cam, shaderProgram);*/
 
+	//draw floor
+	drawFloor(cam);
+
 	glUniform1i(uniTexID, -1); //Set texture ID to use (0 = wood texture, -1 = no texture)
 	p->draw(cam, shaderProgram);
+}
+
+//
+void World::createFloorData()
+{
+	floorData = new float[48] {-100.0, 0.0, -100.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+								-100.0, 0.0, 100.0, 1.0, 0.0, 0.0, 0.0, 0.0,
+								100.0, 0.0, 100.0, 1.0, 1.0, 0.0, 0.0, 0.0,
+								100.0, 0.0, 100.0, 1.0, 1.0, 0.0, 0.0, 0.0,
+								100.0, 0.0, -100.0, 0.0, 1.0, 0.0, 0.0, 0.0,
+								-100.0, 0.0, -100.0, 0.0, 0.0, 0.0, 0.0, 0.0}; //array of floor data
+}
+
+//
+void World::drawFloor(Camera * cam)
+{
+	//Not sure how to make this function, should be similar in effect
+	//to draw function in particle class
+
+	// GLuint vbo;
+	// glGenBuffers(1, &vbo);
+	// glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	// glBufferData(GL_ARRAY_BUFFER, sizeof(floorData), floorData, GL_STATIC_DRAW);
+
 }
 
 //

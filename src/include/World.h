@@ -60,7 +60,8 @@ private:
 	GLuint tex1;
 
 	//what lives in this world
-	float floor; //y coord. of floor
+	float* floorData; //array of floor data
+	float floor; //y value of floor
 	Particle* p;
 
 public:
@@ -82,6 +83,8 @@ public:
 	bool loadModelData();
 	bool setupGraphics();
 	void draw(Camera * cam);
+	void createFloorData();
+	void drawFloor(Camera * cam);
 	void initParticles();
 	void updateParticles(float dt);
 	void spawnParticles();

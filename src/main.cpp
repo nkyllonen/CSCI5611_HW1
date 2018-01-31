@@ -92,6 +92,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	World* myWorld = new World();
+	myWorld->createFloorData();
 
 	/////////////////////////////////
 	//LOAD MODEL DATA INTO WORLD
