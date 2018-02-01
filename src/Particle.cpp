@@ -71,6 +71,11 @@ void Particle::setVertexInfo(int start, int total)
   total_vertices = total;
 }
 
+void Particle::setDamping(float d)
+{
+  damping = d;
+}
+
 /*----------------------------*/
 // GETTERS
 /*----------------------------*/
@@ -92,6 +97,11 @@ Vec3D Particle::getAcc()
 Vec3D Particle::getSize()
 {
   return size;
+}
+
+float Particle::getDamping()
+{
+  return damping;
 }
 
 /*----------------------------*/

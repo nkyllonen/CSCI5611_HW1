@@ -19,6 +19,9 @@ private:
   int start_vertex_index;
   int total_vertices;
 
+  //forces
+  float damping;
+
 public:
   Particle();
   Particle(Vec3D init_pos);
@@ -31,12 +34,14 @@ public:
   void setMaterial(Material m);
   void setSize(Vec3D s);
   void setVertexInfo(int start, int total);
+  void setDamping(float d);
 
   //GETTERS
   Vec3D getPos();
   Vec3D getVel();
   Vec3D getAcc();
   Vec3D getSize();
+  float getDamping();
 
   //OTHERS
   void draw(GLuint shaderProgram);

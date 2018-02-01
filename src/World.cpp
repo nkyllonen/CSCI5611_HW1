@@ -12,27 +12,42 @@ using namespace std;
 /*----------------------------*/
 World::World()
 {
-	width = 0;
-	height = 0;
-	floor = 0.0f;
-	p = new Particle(Vec3D(0,5,0));
+	floor_y = 0.0f;
+	//use for size of floor
+	width = 5;
+	height = 5;
+
 	total_verts = 0;
+	MAX_NUM_P = 100;
+	CUR_NUM_P = 0;
+
+	p_array = new Particle*[MAX_NUM_P];
 }
 
-World::World(int w, int h)
+World::World(int w, int h, int max)
 {
+	floor_y = 0.0f;
+	//use for size of floor
 	width = w;
 	height = h;
-	floor = 0.0f;
-	p = new Particle(Vec3D(0,5,0));
+
 	total_verts = 0;
+	MAX_NUM_P = max;
+	CUR_NUM_P = 0;
+
+	p_array = new Particle*[MAX_NUM_P];
 }
 
 World::~World()
 {
 	delete[] modelData;
-	p->~Particle();
-	//delete floor;
+
+	for (int i = 0; i < CUR_NUM_P; i++)
+	{
+		delete p_array[i];
+	}
+
+	delete[] p_array;
 }
 
 /*----------------------------*/
@@ -52,7 +67,7 @@ void World::setSphereIndices(int start, int tris)
 
 void World::setFloor(float f)
 {
-	floor = f;
+	floor_y = f;
 }
 
 /*----------------------------*/
@@ -219,20 +234,18 @@ void World::draw(Camera * cam)
 
 	glBindVertexArray(vao);
 
-	/*for (int i = 0; i < width*height; i++)
-	{
-			glUniform1i(uniTexID, 0); //Set texture ID to use (0 = wood texture)
-			objects_array[i]->draw(cam, shaderProgram);
-	}//END for loop
-
-	glUniform1i(uniTexID, 1); //Set texture ID to use for floor (1 = brick texture)
+	/*glUniform1i(uniTexID, 1); //Set texture ID to use for floor (1 = brick texture)
 	floor->draw(cam, shaderProgram);*/
 
 	//draw floor
 	drawFloor();
 
 	glUniform1i(uniTexID, -1); //Set texture ID to use (0 = wood texture, -1 = no texture)
-	p->draw(shaderProgram);
+
+	for (int i = 0; i < CUR_NUM_P; i++)
+	{
+			p_array[i]->draw(shaderProgram);
+	}//END for loop
 }
 
 //
@@ -260,10 +273,13 @@ void World::drawFloor()
 }
 
 //
-void World::initParticles()
+void World::initParticle(int index)
 {
-	p->setVel(Vec3D(0,0,0));
+	Particle* p = new Particle(Vec3D(0,rand()%5 + 5,0));
+	p->setVel(Vec3D(0,-0.1*(rand()%10),0));
 	p->setAcc(Vec3D(0,-9.8,0));
+	p->setSize(Vec3D(0.5,0.5,0.5));
+	p->setDamping(-0.60);
 
 	//green sphere
 	Material mat = Material();
@@ -273,52 +289,61 @@ void World::initParticles()
 	p->setMaterial(mat);
 
 	p->setVertexInfo(CUBE_START, CUBE_VERTS);
+
+	p_array[index] = p;
 }
 
 //
 void World::updateParticles(float dt)
 {
-	Vec3D pos = p->getPos();
-	Vec3D vel = p->getVel();
-	Vec3D acc = p->getAcc();
+	Vec3D pos, vel, acc;
+	Vec3D temp_pos, temp_vel;
+	float damping = 0.0;
+	float error = 0.02;
 
-	//cout << "\tdt = " << dt << "\t pos: ";
-	//pos.print();
-
-	//temp
-	Vec3D temp_pos = pos + (dt*vel);
-	Vec3D temp_vel;
-
-	float error = 0.02, damping = -0.70;
-
-	if (temp_pos.getY() > floor)
+	for (int i = 0; i < CUR_NUM_P; i++)
 	{
-		temp_vel = vel + (dt * acc);
+		pos = p_array[i]->getPos();
+		vel = p_array[i]->getVel();
+		acc = p_array[i]->getAcc();
+		damping = p_array[i]->getDamping();
+
+		temp_pos = pos + (dt*vel);
+
+		if (temp_pos.getY() > floor_y)
+		{
+			temp_vel = vel + (dt * acc);
+		}
+		else
+		{
+			if (abs(temp_pos.getY() - pos.getY()) > error)
+			{
+				temp_vel = damping * vel;
+			}
+			else //kill tiny bounces
+			{
+				temp_vel = 0.5*damping * vel;
+			}
+			temp_pos = pos + (dt*temp_vel);
+		}
+
+		p_array[i]->setPos(temp_pos);
+		p_array[i]->setVel(temp_vel);
+	}//END for
+}//END updateParticles
+
+//spawnParticle : add another particle (if able)
+void World::spawnParticle()
+{
+	if (CUR_NUM_P < MAX_NUM_P - 1)
+	{
+		initParticle(CUR_NUM_P);
+		CUR_NUM_P++;
 	}
 	else
 	{
-		if (abs(temp_pos.getY() - pos.getY()) > error)
-		{
-			temp_vel = damping * vel;
-		}
-		else //kill tiny bounces
-		{
-			temp_vel = 0.5*damping * vel;
-		}
-		temp_pos = pos + (dt*temp_vel);
+		cout << "Reached MAX number of particles. Cannot spawn more." << endl;
 	}
-
-	p->setPos(temp_pos);
-	p->setVel(temp_vel);
-}
-
-//
-void World::spawnParticles()
-{
-	p->~Particle();
-
-	p = new Particle(Vec3D(0,5,0));
-	initParticles();
 }
 
 /*----------------------------*/

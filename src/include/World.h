@@ -61,13 +61,17 @@ private:
 
 	//what lives in this world
 	float* floorData; //array of floor data
-	float floor; //y value of floor
-	Particle* p;
+	float floor_y; 		//y value of floor
+
+	//Particle array
+	Particle** p_array;//dynamic array of Particle ptrs
+	int MAX_NUM_P;		//length of p_array
+	int CUR_NUM_P;		//how many currently populate p_array (-1 = index of last filled index)
 
 public:
 	//CONSTRUCTORS AND DESTRUCTORS
 	World();
-	World(int w, int h);
+	World(int w, int h, int max);
 	~World();
 
 	//SETTERS
@@ -85,9 +89,9 @@ public:
 	void draw(Camera * cam);
 	void createFloorData();
 	void drawFloor();
-	void initParticles();
+	void initParticle(int index);
 	void updateParticles(float dt);
-	void spawnParticles();
+	void spawnParticle();
 
 };
 

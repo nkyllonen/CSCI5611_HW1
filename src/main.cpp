@@ -77,6 +77,18 @@ void onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld);
 //							  MAIN
 /*==============================================================*/
 int main(int argc, char *argv[]) {
+	srand(time(0));
+
+	//CHECK FOR MAX_NUM_P VALUE
+	if (argc != 2)
+	{
+		cout << "\nERROR: Incorrect usage. Expected ./a.out MAX_NUM_P\n";
+		exit(0);
+	}
+
+	int max_p = atoi(argv[1]);
+	printf("max_p entered : %i\n", max_p);
+
 	/////////////////////////////////
 	//INITIALIZE SDL WINDOW
 	/////////////////////////////////
@@ -91,7 +103,7 @@ int main(int argc, char *argv[]) {
 		exit(0);
 	}
 
-	World* myWorld = new World();
+	World* myWorld = new World(10,10,max_p);
 	myWorld->createFloorData();
 
 	/////////////////////////////////
@@ -112,7 +124,7 @@ int main(int argc, char *argv[]) {
 	/////////////////////////////////
 	Camera* cam = new Camera();
 	cam->setDir(Vec3D(0, 0, 1));					//look along +z
-	cam->setPos(Vec3D(0,1,-5));						//start
+	cam->setPos(Vec3D(0,1,-10));						//start
 	cam->setUp(Vec3D(0, 1, 0));						//map is in xz plane
 	cam->setRight(Vec3D(1, 0, 0));				//look along +z
 
@@ -141,9 +153,6 @@ int main(int argc, char *argv[]) {
 	//FPS calculations
 	float framecount = 0;
 	float fps = 0, last_fps_print = 0.0;
-
-	//myWorld->setFloor(0.0f);
-	myWorld->initParticles();
 
 	while (!quit)
 	{
@@ -251,7 +260,7 @@ void onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	case SDLK_SPACE:
 	{
 		printf("Spacebar pressed - spawned new particle\n");
-		myWorld->spawnParticles();
+		myWorld->spawnParticle();
 		break;
 	}
 	default:
