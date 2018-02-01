@@ -88,6 +88,7 @@ public:
 	int getHeight();
 	int getMaxNumParticles();
 	int getCurNumParticles();
+	int getEmitterGenRate();
 
 	//OTHERS
 	bool loadModelData();

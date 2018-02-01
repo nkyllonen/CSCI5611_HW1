@@ -152,10 +152,12 @@ int main(int argc, char *argv[]) {
 	===========================================================================================*/
 	SDL_Event windowEvent;
 	bool quit = false;
-	bool mouseActive = false;
-	bool mouseOnScreen = false;
+	bool mouse_active = false;
 	bool recentering = true;
 	float last_time = SDL_GetTicks(),	delta_time = 0,	new_time = 0;
+	
+	bool ready_to_emit = true;
+	float last_emission;
 
 	//FPS calculations
 	float framecount = 0;
@@ -181,9 +183,9 @@ int main(int argc, char *argv[]) {
 				if (recentering)
 				{
 					SDL_WarpMouseInWindow(window, screen_width / 2, screen_height / 2);
-					mouseActive = true;
+					mouse_active = true;
 				}
-				else if (mouseActive && !recentering)
+				else if (mouse_active && !recentering)
 				{
 					mouseMove(windowEvent.motion, cam, horizontal_angle, vertical_angle);
 					// recentering = true;
@@ -194,7 +196,7 @@ int main(int argc, char *argv[]) {
 			SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0); //Set to full screen
 		}//END polling while
 
-		if (mouseActive)
+		if (mouse_active)
 		{
 			recentering = false;
 		}
@@ -207,6 +209,19 @@ int main(int argc, char *argv[]) {
 		delta_time = (new_time - last_time) / 1000.0;
 		last_time = new_time;
 		myWorld->updateParticles(delta_time);
+
+		if (ready_to_emit)
+		{
+			myWorld->spawnParticles();
+			ready_to_emit = false;
+			last_emission = new_time;
+		}
+
+		if ((new_time - last_emission) / 1000.0 >= myWorld->getEmitterGenRate())
+		{
+			ready_to_emit = true;
+		}
+
 
 		if ((new_time - last_fps_print) / 1000.0 >= 1.0) //only print every 1+ seconds
 		{

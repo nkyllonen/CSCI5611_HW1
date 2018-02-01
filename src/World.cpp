@@ -49,6 +49,10 @@ World::World(int w, int h)
 World::~World()
 {
 	delete[] modelData;
+	for (int i = 0; i < cur_num_particles; i++)
+	{
+		delete particleArray[i];
+	}
 	delete[] particleArray;
 	particleEmitter->~Emitter();
 	//delete floor;
@@ -100,6 +104,11 @@ int World::getMaxNumParticles()
 int World::getCurNumParticles()
 {
 	return cur_num_particles;
+}
+
+int World::getEmitterGenRate()
+{
+	return particleEmitter->getGenRate();
 }
 
 /*----------------------------*/
