@@ -142,9 +142,9 @@ bool World::setupGraphics()
 	//SETUP SHADERS
 	/////////////////////////////////
 	#ifdef __APPLE__
-	shaderProgram = util::LoadShader("../Shaders/phongTex.vert", "../Shaders/phongTex.frag");
+	shaderProgram = util::LoadShader("../shaders/phongTex.vert", "../shaders/phongTex.frag");
 	#else
-	shaderProgram = util::LoadShader("Shaders/phongTex.vert", "Shaders/phongTex.frag");
+	shaderProgram = util::LoadShader("shaders/phongTex.vert", "shaders/phongTex.frag");
 	#endif
 
 	//load in textures
@@ -272,7 +272,7 @@ void World::initParticles()
 	mat.setSpecular(glm::vec3(0.75, 0.75, 0.75));
 	p->setMaterial(mat);
 
-	p->setVertexInfo(SPHERE_START, SPHERE_VERTS);
+	p->setVertexInfo(CUBE_START, CUBE_VERTS);
 }
 
 //
