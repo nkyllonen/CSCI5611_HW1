@@ -15,8 +15,23 @@ World::World()
 	width = 0;
 	height = 0;
 	floor = 0.0f;
-	p = new Particle(Vec3D(0,5,0));
+	particleArray = new Particle*[100];
+	particleEmitter = new Emitter();
 	total_verts = 0;
+	max_num_particles = 100;
+	cur_num_particles = 0;
+}
+
+World::World(int max_particles)
+{
+	width = 0;
+	height = 0;
+	floor = 0.0f;
+	particleArray = new Particle*[max_particles];
+	particleEmitter = new Emitter();
+	total_verts = 0;
+	max_num_particles = max_particles;
+	cur_num_particles = 0;
 }
 
 World::World(int w, int h)
@@ -24,14 +39,18 @@ World::World(int w, int h)
 	width = w;
 	height = h;
 	floor = 0.0f;
-	p = new Particle(Vec3D(0,5,0));
+	particleArray = new Particle*[100];
+	particleEmitter = new Emitter();
 	total_verts = 0;
+	max_num_particles = 100;
+	cur_num_particles = 0;
 }
 
 World::~World()
 {
 	delete[] modelData;
-	p->~Particle();
+	delete[] particleArray;
+	particleEmitter->~Emitter();
 	//delete floor;
 }
 
@@ -55,6 +74,11 @@ void World::setFloor(float f)
 	floor = f;
 }
 
+void World::setCurNumParticles(int num)
+{
+	cur_num_particles = num;
+}
+
 /*----------------------------*/
 // GETTERS
 /*----------------------------*/
@@ -66,6 +90,16 @@ int World::getWidth()
 int World::getHeight()
 {
 	return height;
+}
+
+int World::getMaxNumParticles()
+{
+	return max_num_particles;
+}
+
+int World::getCurNumParticles()
+{
+	return cur_num_particles;
 }
 
 /*----------------------------*/
@@ -232,7 +266,11 @@ void World::draw(Camera * cam)
 	drawFloor();
 
 	glUniform1i(uniTexID, -1); //Set texture ID to use (0 = wood texture, -1 = no texture)
-	p->draw(shaderProgram);
+	
+	for (int i = 0; i < cur_num_particles; i++)
+	{
+		particleArray[i]->draw(shaderProgram);
+	}
 }
 
 //
@@ -260,65 +298,75 @@ void World::drawFloor()
 }
 
 //
-void World::initParticles()
+void World::initEmitter()
 {
-	p->setVel(Vec3D(0,0,0));
-	p->setAcc(Vec3D(0,-9.8,0));
+	particleEmitter->setPos(Vec3D(0, 5, 0));
 
 	//green sphere
 	Material mat = Material();
 	mat.setAmbient(glm::vec3(0, 1, 0));
 	mat.setDiffuse(glm::vec3(0, 1, 0));
 	mat.setSpecular(glm::vec3(0.75, 0.75, 0.75));
-	p->setMaterial(mat);
+	particleEmitter->setMaterial(mat);
 
-	p->setVertexInfo(SPHERE_START, SPHERE_VERTS);
+	particleEmitter->setVertexInfo(SPHERE_START, SPHERE_VERTS);
 }
 
 //
 void World::updateParticles(float dt)
 {
-	Vec3D pos = p->getPos();
-	Vec3D vel = p->getVel();
-	Vec3D acc = p->getAcc();
-
-	//cout << "\tdt = " << dt << "\t pos: ";
-	//pos.print();
-
-	//temp
-	Vec3D temp_pos = pos + (dt*vel);
-	Vec3D temp_vel;
-
-	float error = 0.02, damping = -0.70;
-
-	if (temp_pos.getY() > floor)
+	for (int i = 0; i < cur_num_particles; i++)
 	{
-		temp_vel = vel + (dt * acc);
-	}
-	else
-	{
-		if (abs(temp_pos.getY() - pos.getY()) > error)
-		{
-			temp_vel = damping * vel;
-		}
-		else //kill tiny bounces
-		{
-			temp_vel = 0.5*damping * vel;
-		}
-		temp_pos = pos + (dt*temp_vel);
-	}
+		Particle * p = particleArray[i]; //ith particle
 
-	p->setPos(temp_pos);
-	p->setVel(temp_vel);
+		Vec3D pos = p->getPos();
+		Vec3D vel = p->getVel();
+		Vec3D acc = p->getAcc();
+
+		//cout << "\tdt = " << dt << "\t pos: ";
+		//pos.print();
+
+		//temp
+		Vec3D temp_pos = pos + (dt*vel);
+		Vec3D temp_vel;
+
+		float error = 0.02, damping = -0.70;
+
+		if (temp_pos.getY() > floor)
+		{
+			temp_vel = vel + (dt * acc);
+		}
+		else
+		{
+			if (abs(temp_pos.getY() - pos.getY()) > error)
+			{
+				temp_vel = damping * vel;
+			}
+			else //kill tiny bounces
+			{
+				temp_vel = 0.5*damping * vel;
+			}
+			temp_pos = pos + (dt*temp_vel);
+		}
+
+		p->setPos(temp_pos);
+		p->setVel(temp_vel);
+
+		particleArray[i] = p;
+	}
 }
 
 //
 void World::spawnParticles()
 {
-	p->~Particle();
-
-	p = new Particle(Vec3D(0,5,0));
-	initParticles();
+	if (cur_num_particles < max_num_particles)
+	{
+		printf("Spacebar pressed - spawned new particle\n");
+		Particle * p;
+		p = particleEmitter->generateParticle();
+		particleArray[cur_num_particles] = p;
+		cur_num_particles++;
+	}
 }
 
 /*----------------------------*/

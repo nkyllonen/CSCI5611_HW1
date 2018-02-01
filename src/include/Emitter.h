@@ -1,18 +1,18 @@
-#ifndef PARTICLE_INCLUDED
-#define PARTICLE_INCLUDED
+#ifndef EMITTER_INCLUDED
+#define EMITTER_INCLUDED
 
 #include "Vec3D.h"
-#include "Util.h"
-#include "Camera.h"
 #include "Material.h"
+#include "Particle.h"
 
-class Particle
+class Emitter
 {
 private:
   Vec3D pos;
   Vec3D vel;
   Vec3D acc;
   float lifespan;
+  float gen_rate; //number of particles to generate per second
 
   //model information
   Material mat;
@@ -21,15 +21,15 @@ private:
   int total_vertices;
 
 public:
-  Particle();
-  Particle(Vec3D init_pos);
-  ~Particle();
+  Emitter();
+  ~Emitter();
 
   //SETTERS
   void setPos(Vec3D p);
   void setVel(Vec3D v);
   void setAcc(Vec3D a);
   void setLifespan(float l);
+  void setGenRate(float g);
   void setMaterial(Material m);
   void setSize(Vec3D s);
   void setVertexInfo(int start, int total);
@@ -39,11 +39,11 @@ public:
   Vec3D getVel();
   Vec3D getAcc();
   float getLifespan();
+  float getGenRate();
   Vec3D getSize();
 
   //OTHERS
-  void draw(GLuint shaderProgram);
+  Particle * generateParticle();
 
 };
-
 #endif

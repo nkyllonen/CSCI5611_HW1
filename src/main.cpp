@@ -37,6 +37,7 @@
 #include <cstdio>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 
 //MY CLASSES
@@ -80,6 +81,13 @@ void mouseMove(SDL_MouseMotionEvent & event, Camera * player, float horizontal_a
 /*==============================================================*/
 int main(int argc, char *argv[]) {
 	/////////////////////////////////
+	//SOLICIT USER INPUT
+	/////////////////////////////////
+	int max_num_particles;
+	cout << "Please enter a maximum number of particles: ";
+	cin >> max_num_particles;
+
+	/////////////////////////////////
 	//INITIALIZE SDL WINDOW
 	/////////////////////////////////
 	SDL_GLContext context;
@@ -93,7 +101,7 @@ int main(int argc, char *argv[]) {
 		exit(0);
 	}
 
-	World* myWorld = new World();
+	World* myWorld = new World(max_num_particles);
 	myWorld->createFloorData();
 
 	/////////////////////////////////
@@ -153,7 +161,7 @@ int main(int argc, char *argv[]) {
 	float framecount = 0;
 	float fps = 0, last_fps_print = 0.0;
 
-	myWorld->initParticles();
+	myWorld->initEmitter();
 
 	while (!quit)
 	{
@@ -263,7 +271,6 @@ void onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	////////////////////////////////
 	case SDLK_SPACE:
 	{
-		printf("Spacebar pressed - spawned new particle\n");
 		myWorld->spawnParticles();
 		break;
 	}
