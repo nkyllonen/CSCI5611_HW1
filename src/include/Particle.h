@@ -1,25 +1,14 @@
 #ifndef PARTICLE_INCLUDED
 #define PARTICLE_INCLUDED
 
-#include "Vec3D.h"
-#include "Util.h"
-#include "Camera.h"
-#include "Material.h"
+#include "WorldObject.h"
 
-class Particle
+class Particle : public WorldObject
 {
 private:
-  Vec3D pos;
-  Vec3D vel;
-  Vec3D acc;
   float birth;
   float lifespan;
-
-  //model information
-  Material mat;
-  Vec3D size;
-  int start_vertex_index;
-  int total_vertices;
+  float damping;
 
 public:
   Particle();
@@ -27,25 +16,15 @@ public:
   ~Particle();
 
   //SETTERS
-  void setPos(Vec3D p);
-  void setVel(Vec3D v);
-  void setAcc(Vec3D a);
   void setBirth(float b);
   void setLifespan(float l);
-  void setMaterial(Material m);
-  void setSize(Vec3D s);
-  void setVertexInfo(int start, int total);
 
   //GETTERS
-  Vec3D getPos();
-  Vec3D getVel();
-  Vec3D getAcc();
   float getBirth();
   float getLifespan();
-  Vec3D getSize();
+  float getDamping();
 
   //OTHERS
-  void draw(GLuint shaderProgram);
 
 };
 

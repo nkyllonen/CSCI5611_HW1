@@ -275,7 +275,7 @@ void World::draw(Camera * cam)
 	drawFloor();
 
 	glUniform1i(uniTexID, -1); //Set texture ID to use (0 = wood texture, -1 = no texture)
-	
+
 	for (int i = 0; i < cur_num_particles; i++)
 	{
 		particleArray[i]->draw(shaderProgram);
@@ -285,12 +285,21 @@ void World::draw(Camera * cam)
 //
 void World::createFloorData()
 {
-	floorData = new float[48] {-100.0, 0.0, -100.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+	/*floorData = new float[48] {-100.0, 0.0, -100.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 								-100.0, 0.0, 100.0, 1.0, 0.0, 0.0, 0.0, 0.0,
 								100.0, 0.0, 100.0, 1.0, 1.0, 0.0, 0.0, 0.0,
 								100.0, 0.0, 100.0, 1.0, 1.0, 0.0, 0.0, 0.0,
 								100.0, 0.0, -100.0, 0.0, 1.0, 0.0, 0.0, 0.0,
 								-100.0, 0.0, -100.0, 0.0, 0.0, 0.0, 0.0, 0.0}; //array of floor data
+								*/
+
+	//1x1 quad in the xy plane centered on origin
+	/*floorData = new float[12] {
+							-0.5f,0.0f,-0.5f,
+							-0.5f,0.0f,0.5f,
+							0.5f, 0.0f, 0.5f,
+							0.5f, 0.0f, -0.5f
+						}*/
 }
 
 //
@@ -320,7 +329,7 @@ void World::initEmitter()
 	mat.setSpecular(glm::vec3(0.75, 0.75, 0.75));
 	particleEmitter->setMaterial(mat);
 
-	particleEmitter->setVertexInfo(SPHERE_START, SPHERE_VERTS);
+	particleEmitter->setVertexInfo(CUBE_START, CUBE_VERTS);
 }
 
 //
