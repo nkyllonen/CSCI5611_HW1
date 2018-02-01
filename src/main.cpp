@@ -66,12 +66,14 @@ string vertFile = "Shaders/phong.vert";
 string fragFile = "Shaders/phong.frag";
 #endif
 
-const float step_size = 0.25f;
+const float mouse_speed = 0.05f;
+const float step_size = 0.15f;
 
 /*=============================*/
 // Helper Functions
 /*=============================*/
 void onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld);
+void mouseMove(SDL_MouseMotionEvent & event, Camera * player, float horizontal_angle, float vertical_angle);
 
 /*==============================================================*/
 //							  MAIN
@@ -117,6 +119,12 @@ int main(int argc, char *argv[]) {
 	cam->setRight(Vec3D(1, 0, 0));				//look along +z
 
 	/////////////////////////////////
+	//SETUP MOUSE INITIAL STATE
+	/////////////////////////////////
+	float horizontal_angle = 0.0f;
+	float vertical_angle = 0.0f;
+
+	/////////////////////////////////
 	//VAO + VBO + SHADERS + TEXTURES
 	/////////////////////////////////
 	if (!myWorld->setupGraphics())
@@ -136,34 +144,52 @@ int main(int argc, char *argv[]) {
 	===========================================================================================*/
 	SDL_Event windowEvent;
 	bool quit = false;
+	bool mouseActive = false;
+	bool mouseOnScreen = false;
+	bool recentering = true;
 	float last_time = SDL_GetTicks(),	delta_time = 0,	new_time = 0;
 
 	//FPS calculations
 	float framecount = 0;
 	float fps = 0, last_fps_print = 0.0;
 
-	//myWorld->setFloor(0.0f);
 	myWorld->initParticles();
 
 	while (!quit)
 	{
-		if (SDL_PollEvent(&windowEvent)) {
+		while (SDL_PollEvent(&windowEvent)) {
 			switch (windowEvent.type) //event type -- key up or down
 			{
 			case SDL_QUIT:
 				quit = true; //Exit event loop
 				break;
-			case SDL_KEYUP:
+			case SDL_KEYDOWN:
 				//check for escape or fullscreen before checking other commands
 				if (windowEvent.key.keysym.sym == SDLK_ESCAPE) quit = true; //Exit event loop
 				else if (windowEvent.key.keysym.sym == SDLK_f) fullscreen = !fullscreen;
 				onKeyUp(windowEvent.key, cam, myWorld);
 				break;
+			case SDL_MOUSEMOTION:
+				if (recentering)
+				{
+					SDL_WarpMouseInWindow(window, screen_width / 2, screen_height / 2);
+					mouseActive = true;
+				}
+				else if (mouseActive && !recentering)
+				{
+					mouseMove(windowEvent.motion, cam, horizontal_angle, vertical_angle);
+					// recentering = true;
+				}
 			default:
 				break;
 			}//END polling switch
 			SDL_SetWindowFullscreen(window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0); //Set to full screen
-		}//END polling If
+		}//END polling while
+
+		if (mouseActive)
+		{
+			recentering = false;
+		}
 
 		//draw entire world
 		myWorld->draw(cam);
@@ -214,36 +240,23 @@ void onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	switch (event.keysym.sym)
 	{
 	/////////////////////////////////
-	//TRANSLATION WITH ARROW KEYS
+	//TRANSLATION WITH WASD
 	/////////////////////////////////
-	case SDLK_UP:
-		//printf("Up arrow pressed - step forward\n");
+	case SDLK_w:
+		//printf("W key pressed - step forward\n");
 		temp_pos = pos + (step_size*dir);
 		break;
-	case SDLK_DOWN:
-		//printf("Down arrow pressed - step backward\n");
+	case SDLK_s:
+		//printf("S key pressed - step backward\n");
 		temp_pos = pos - (step_size*dir);
 		break;
-	case SDLK_RIGHT:
-		//printf("Right arrow pressed - step to the right\n");
+	case SDLK_d:
+		//printf("D key pressed - step to the right\n");
 		temp_pos = pos + (step_size*right);
 		break;
-	case SDLK_LEFT:
-		//printf("Left arrow pressed - step to the left\n");
-		temp_pos = pos - (step_size*right);
-		break;
-	////////////////////////////////
-	//TURNING WITH A/D KEYS
-	////////////////////////////////
-	case SDLK_d:
-		//printf("D key pressed - turn to the right\n");
-		temp_dir = dir + (step_size*right);
-		temp_right = cross(temp_dir, up); //calc new right using new dir
-		break;
 	case SDLK_a:
-		//printf("A key pressed - turn to the left\n");
-		temp_dir = dir - (step_size*right);
-		temp_right = cross(temp_dir, up); //calc new right using new dir
+		//printf("A key pressed - step to the left\n");
+		temp_pos = pos - (step_size*right);
 		break;
 	////////////////////////////////
 	//SPACEBAR PRESS
@@ -263,3 +276,30 @@ void onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	cam->setPos(temp_pos);
 	return;
 }//END onKeyUp
+
+/*--------------------------------------------------------------*/
+// mouseMove : change the view accordingly when the mouse moves!
+/*--------------------------------------------------------------*/
+
+void mouseMove(SDL_MouseMotionEvent & event, Camera * cam, float horizontal_angle, float vertical_angle)
+{
+	Vec3D dir = cam->getDir();
+	Vec3D right = cam->getRight();
+	Vec3D up = cam->getUp();
+
+	//temps to be modified
+	Vec3D temp_dir = dir;
+	Vec3D temp_right = right;
+	Vec3D temp_up = up;
+
+	horizontal_angle += mouse_speed * step_size * float(screen_width / 2 - event.x);
+	vertical_angle += mouse_speed * step_size * float(screen_height / 2 - event.y);
+
+	temp_dir = dir + (Vec3D(cos(vertical_angle) * sin(horizontal_angle), sin(vertical_angle), cos(vertical_angle) * cos(horizontal_angle)));
+	temp_right = right + (Vec3D(sin(horizontal_angle - 3.14f / 2.0f), 0, cos(horizontal_angle - 3.14f / 2.0f)));
+	temp_up = cross(temp_dir, -1 * temp_right);
+
+	cam->setDir(temp_dir);
+	cam->setRight(temp_right);
+	cam->setUp(temp_up);
+}
