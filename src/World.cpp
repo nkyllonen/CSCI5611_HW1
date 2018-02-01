@@ -311,6 +311,8 @@ void World::initEmitter()
 {
 	particleEmitter->setPos(Vec3D(0, 5, 0));
 
+	particleEmitter->setGenRate(3);
+
 	//green sphere
 	Material mat = Material();
 	mat.setAmbient(glm::vec3(0, 1, 0));
@@ -322,57 +324,69 @@ void World::initEmitter()
 }
 
 //
-void World::updateParticles(float dt)
+void World::updateParticles(float dt, float cur_time)
 {
 	for (int i = 0; i < cur_num_particles; i++)
 	{
 		Particle * p = particleArray[i]; //ith particle
 
-		Vec3D pos = p->getPos();
-		Vec3D vel = p->getVel();
-		Vec3D acc = p->getAcc();
-
-		//cout << "\tdt = " << dt << "\t pos: ";
-		//pos.print();
-
-		//temp
-		Vec3D temp_pos = pos + (dt*vel);
-		Vec3D temp_vel;
-
-		float error = 0.02, damping = -0.70;
-
-		if (temp_pos.getY() > floor)
+		if ((cur_time - p->getBirth()) / 1000.0 >= p->getLifespan())
 		{
-			temp_vel = vel + (dt * acc);
+			//kill the particle
+			particleArray[i] = particleArray[cur_num_particles-1]; //set ith spot in array as last particle in the array
+			particleArray[cur_num_particles-1] = NULL;
+			cur_num_particles--;
 		}
 		else
 		{
-			if (abs(temp_pos.getY() - pos.getY()) > error)
+			//move the particle
+			Vec3D pos = p->getPos();
+			Vec3D vel = p->getVel();
+			Vec3D acc = p->getAcc();
+
+			//cout << "\tdt = " << dt << "\t pos: ";
+			//pos.print();
+
+			//temp
+			Vec3D temp_pos = pos + (dt*vel);
+			Vec3D temp_vel;
+
+			float error = 0.02, damping = -0.70;
+
+			if (temp_pos.getY() > floor)
 			{
-				temp_vel = damping * vel;
+				temp_vel = vel + (dt * acc);
 			}
-			else //kill tiny bounces
+			else
 			{
-				temp_vel = 0.5*damping * vel;
+				if (abs(temp_pos.getY() - pos.getY()) > error)
+				{
+					temp_vel = damping * vel;
+				}
+				else //kill tiny bounces
+				{
+					temp_vel = 0.5*damping * vel;
+				}
+				temp_pos = pos + (dt*temp_vel);
 			}
-			temp_pos = pos + (dt*temp_vel);
+
+			p->setPos(temp_pos);
+			p->setVel(temp_vel);
+
+			particleArray[i] = p;
 		}
-
-		p->setPos(temp_pos);
-		p->setVel(temp_vel);
-
-		particleArray[i] = p;
 	}
 }
 
 //
-void World::spawnParticles()
+void World::spawnParticle(float cur_time)
 {
 	if (cur_num_particles < max_num_particles)
 	{
 		printf("Spacebar pressed - spawned new particle\n");
 		Particle * p;
 		p = particleEmitter->generateParticle();
+		p->setBirth(cur_time);
 		particleArray[cur_num_particles] = p;
 		cur_num_particles++;
 	}

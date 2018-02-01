@@ -97,8 +97,8 @@ public:
 	void createFloorData();
 	void drawFloor();
 	void initEmitter();
-	void updateParticles(float dt);
-	void spawnParticles();
+	void updateParticles(float dt, float cur_time);
+	void spawnParticle(float cur_time);
 
 };
 

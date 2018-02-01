@@ -15,7 +15,7 @@ Emitter::Emitter()
 	vel = Vec3D();
 	acc = Vec3D(0, -9.8, 0);
 	lifespan = 5; //particles live for 5 seconds
-	gen_rate = 5; //1 particles per second
+	gen_rate = 5; //1 particle every 5 seconds
 	mat = Material();
 	size = Vec3D(1, 1, 1);
 	start_vertex_index = 0;

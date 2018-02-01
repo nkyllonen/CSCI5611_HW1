@@ -208,11 +208,11 @@ int main(int argc, char *argv[]) {
 		new_time = SDL_GetTicks();
 		delta_time = (new_time - last_time) / 1000.0;
 		last_time = new_time;
-		myWorld->updateParticles(delta_time);
+		myWorld->updateParticles(delta_time, new_time);
 
 		if (ready_to_emit)
 		{
-			myWorld->spawnParticles();
+			myWorld->spawnParticle(new_time);
 			ready_to_emit = false;
 			last_emission = new_time;
 		}
@@ -281,14 +281,6 @@ void onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 		//printf("A key pressed - step to the left\n");
 		temp_pos = pos - (step_size*right);
 		break;
-	////////////////////////////////
-	//SPACEBAR PRESS
-	////////////////////////////////
-	case SDLK_SPACE:
-	{
-		myWorld->spawnParticles();
-		break;
-	}
 	default:
 		break;
 	}//END switch key press

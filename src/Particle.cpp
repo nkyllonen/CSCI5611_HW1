@@ -15,6 +15,7 @@ Particle::Particle()
   pos = Vec3D();
   vel = Vec3D();
   acc = Vec3D();
+  birth = 0.0;
   lifespan = 5;
   size = Vec3D(1, 1, 1);
 	start_vertex_index = 0;
@@ -27,6 +28,7 @@ Particle::Particle(Vec3D init_pos)
   pos = init_pos;
   vel = Vec3D();
   acc = Vec3D();
+  birth = 0.0;
   lifespan = 5;
   size = Vec3D(1, 1, 1);
 	start_vertex_index = 0;
@@ -54,6 +56,11 @@ void Particle::setVel(Vec3D v)
 void Particle::setAcc(Vec3D a)
 {
   acc = a;
+}
+
+void Particle::setBirth(float b)
+{
+	birth = b;
 }
 
 void Particle::setLifespan(float l)
@@ -93,6 +100,11 @@ Vec3D Particle::getVel()
 Vec3D Particle::getAcc()
 {
   return acc;
+}
+
+float Particle::getBirth()
+{
+	return birth;
 }
 
 float Particle::getLifespan()
