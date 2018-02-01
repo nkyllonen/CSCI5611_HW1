@@ -311,7 +311,10 @@ void World::initEmitter()
 {
 	particleEmitter->setPos(Vec3D(0, 5, 0));
 
-	particleEmitter->setGenRate(3);
+	particleEmitter->setLifespan(100);
+	particleEmitter->setGenRate(.1);
+	particleEmitter->setVel(Vec3D(2,10,0));
+	particleEmitter->setSize(Vec3D(.1,.1,.1));
 
 	//green sphere
 	Material mat = Material();
@@ -320,7 +323,7 @@ void World::initEmitter()
 	mat.setSpecular(glm::vec3(0.75, 0.75, 0.75));
 	particleEmitter->setMaterial(mat);
 
-	particleEmitter->setVertexInfo(SPHERE_START, SPHERE_VERTS);
+	particleEmitter->setVertexInfo(CUBE_START, CUBE_VERTS);
 }
 
 //
@@ -383,7 +386,6 @@ void World::spawnParticle(float cur_time)
 {
 	if (cur_num_particles < max_num_particles)
 	{
-		printf("Spacebar pressed - spawned new particle\n");
 		Particle * p;
 		p = particleEmitter->generateParticle();
 		p->setBirth(cur_time);

@@ -113,7 +113,7 @@ Particle * Emitter::generateParticle()
 	p->setPos(pos);
 	p->setVel(vel + Vec3D(.1 * (rand()%5), 0, .1 * (rand()%5)));
 	p->setAcc(acc);
-	p->setLifespan(lifespan + (.1 * (rand()%5)));
+	p->setLifespan(lifespan + (.5 * (rand()%5)));
 	p->setMaterial(mat);
 	p->setSize(size);
 	p->setVertexInfo(start_vertex_index, total_vertices);
