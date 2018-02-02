@@ -27,7 +27,7 @@ protected:
 public:
 	//CONSTRUCTORS AND DESTRUCTORS
 	WorldObject();
-	WorldObject(Coord2D indices);
+	WorldObject(Vec3D init_pos);
 	~WorldObject();
 
 	//SETTERS
@@ -37,6 +37,7 @@ public:
 	void setVertexInfo(int start, int total);
 	void setMaterial(Material m);
 	void setSize(Vec3D s);
+	void setColor(Vec3D color); //sets ambient and diffuse to 'color'
 
 	//GETTERS
 	Vec3D getPos();

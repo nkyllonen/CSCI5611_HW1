@@ -18,6 +18,7 @@ public:
   //SETTERS
   void setBirth(float b);
   void setLifespan(float l);
+  void setDamping(float d);
 
   //GETTERS
   float getBirth();

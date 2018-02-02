@@ -7,20 +7,20 @@ using namespace std;
 /*----------------------------*/
 WorldObject::WorldObject()
 {
-	world_pos = Vec3D(0, 0, 0);
-	world_indices = Coord2D(0, 0);
-	world_level = 0;
+	pos = Vec3D();
+	vel = Vec3D();
+	acc = Vec3D();
 	size = Vec3D(1, 1, 1);
 	start_vertex_index = 0;
 	total_vertices = 0;
 	mat = Material();
 }
 
-WorldObject::WorldObject(Coord2D indices)
+WorldObject::WorldObject(Vec3D init_pos)
 {
-	world_pos = Vec3D(0, 0, 0);
-	world_indices = indices;
-	world_level = 0;
+	pos = init_pos;
+	vel = Vec3D();
+	acc = Vec3D();
 	size = Vec3D(1, 1, 1);
 	start_vertex_index = 0;
 	total_vertices = 0;
@@ -63,6 +63,13 @@ void WorldObject::setMaterial(Material m)
 void WorldObject::setSize(Vec3D s)
 {
 	size = s;
+}
+
+void WorldObject::setColor(Vec3D color)
+{
+	glm::vec3 c = util::vec3DtoGLM(color);
+	mat.setAmbient(c);
+	mat.setDiffuse(c);
 }
 
 /*----------------------------*/
