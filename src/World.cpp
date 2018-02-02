@@ -392,7 +392,6 @@ void World::spawnParticle(float cur_time)
 {
 	if (cur_num_particles < max_num_particles)
 	{
-		printf("Spacebar pressed - spawned new particle\n");
 		Particle * p;
 		p = particleEmitter->generateParticle();
 		p->setBirth(cur_time);
