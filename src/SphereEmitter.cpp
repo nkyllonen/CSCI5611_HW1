@@ -44,10 +44,9 @@ float SphereEmitter::getRadius()
 /*----------------------------*/
 Vec3D SphereEmitter::generateRandomPos()
 {
-	//this is just the generateRandomPos for a disc,
-	//i haven't implemented it for sphere yet
-	
-	float r = rand() / (RAND_MAX / 1.0f);
-	float theta = rand() / (RAND_MAX / (2 * M_PI));
-	return Vec3D(r * cos(theta), getOrigin().getY(), r * sin(theta)); //assumes disc in the y plane
+	float u = rand() / (RAND_MAX / 1.0f);
+	float v = rand() / (RAND_MAX / 1.0f);
+	float phi = 2 * M_PI * u;
+	float theta = acos(2 * v - 1);
+	return Vec3D(getOrigin().getX() + radius * sin(theta) * cos(phi), getOrigin().getY() + radius * sin(theta) * sin(phi), getOrigin().getZ() + radius * cos(theta)); //assumes disc in the y plane
 }

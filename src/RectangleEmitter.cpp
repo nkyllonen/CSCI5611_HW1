@@ -58,5 +58,5 @@ Vec3D RectangleEmitter::generateRandomPos()
 {
 	float pos_x = rand() / (RAND_MAX / length);
 	float pos_z = rand() / (RAND_MAX / width);
-	return Vec3D(pos_x - (length / 2), getOrigin().getY(), pos_z - (width / 2)); //assumes rectangle in the y plane
+	return Vec3D(getOrigin().getX() + pos_x - (length / 2), getOrigin().getY(), getOrigin().getZ() + pos_z - (width / 2)); //assumes rectangle in the y plane
 }
