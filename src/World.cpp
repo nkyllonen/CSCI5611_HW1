@@ -71,6 +71,11 @@ void World::setCurNumParticles(int num)
 	cur_num_particles = num;
 }
 
+void World::setEmitterGenRate(float rate)
+{
+	particleEmitter->setGenRate(rate);
+}
+
 /*----------------------------*/
 // GETTERS
 /*----------------------------*/

@@ -89,6 +89,7 @@ public:
 	void setSphereIndices(int start, int tris);
 	void setFloor(float f);
 	void setCurNumParticles(int num);
+	void setEmitterGenRate(float rate);
 
 	//GETTERS
 	int getWidth();

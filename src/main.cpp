@@ -281,6 +281,15 @@ void onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	case SDLK_SPACE:
 		myWorld->turnEmitterOnOff();
 		break;
+	/////////////////////////////////
+	//INCREASE/DECREASE EMITTER GENRATE WITH UP/DOWN
+	/////////////////////////////////
+	case SDLK_UP:
+		myWorld->setEmitterGenRate(myWorld->getEmitterGenRate() * 0.5);
+		break;
+	case SDLK_DOWN:
+		myWorld->setEmitterGenRate(myWorld->getEmitterGenRate() * 2);
+		break;
 	default:
 		break;
 	}//END switch key press
