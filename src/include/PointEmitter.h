@@ -13,6 +13,7 @@ private:
 
 public:
 	//CONSTRUCTORS AND DESTRUCTORS
+	PointEmitter(Vec3D o);
 	~PointEmitter();
 
 	//VIRTUAL

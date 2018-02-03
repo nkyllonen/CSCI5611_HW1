@@ -27,6 +27,7 @@ public:
   //SETTERS
   void setOrigin(Vec3D o);
   void setGenRate(float g);
+  void setActive(bool b);
 
   //GETTERS
   Vec3D getOrigin();

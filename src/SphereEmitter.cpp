@@ -14,6 +14,11 @@ SphereEmitter::SphereEmitter()
 	radius = 1;
 }
 
+SphereEmitter::SphereEmitter(Vec3D o) : Emitter::Emitter(o)
+{
+	radius = 1;
+}
+
 SphereEmitter::SphereEmitter(Vec3D o, float r) : Emitter::Emitter(o)
 {
 	radius = r;

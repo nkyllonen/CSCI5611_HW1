@@ -290,6 +290,21 @@ void onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	case SDLK_DOWN:
 		myWorld->setEmitterGenRate(myWorld->getEmitterGenRate() * 2);
 		break;
+	/////////////////////////////////
+	//CHANGE EMITTER SUBCLASS WITH UIOP
+	/////////////////////////////////
+	case SDLK_u:
+		myWorld->setEmitterToPoint();
+		break;
+	case SDLK_i:
+		myWorld->setEmitterToDisc();
+		break;
+	case SDLK_o:
+		myWorld->setEmitterToSphere();
+		break;
+	case SDLK_p:
+		myWorld->setEmitterToRectangle();
+		break;
 	default:
 		break;
 	}//END switch key press

@@ -47,6 +47,11 @@ void Emitter::setGenRate(float g)
 	gen_rate = g;
 }
 
+void Emitter::setActive(bool b)
+{
+	active = b;
+}
+
 /*----------------------------*/
 // GETTERS
 /*----------------------------*/

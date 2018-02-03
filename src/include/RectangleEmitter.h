@@ -18,6 +18,7 @@ private:
 public:
 	//CONSTRUCTORS AND DESTRUCTORS
 	RectangleEmitter();
+	RectangleEmitter(Vec3D o);
 	RectangleEmitter(Vec3D o, float l, float w);
 	~RectangleEmitter();
 

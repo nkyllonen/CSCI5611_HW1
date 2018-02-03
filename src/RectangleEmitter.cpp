@@ -11,8 +11,14 @@ using namespace std;
 /*----------------------------*/
 RectangleEmitter::RectangleEmitter()
 {
-	length = 1;
-	width = 1;
+	length = 2;
+	width = 2;
+}
+
+RectangleEmitter::RectangleEmitter(Vec3D o) : Emitter::Emitter(o)
+{
+	length = 2;
+	width = 2;
 }
 
 RectangleEmitter::RectangleEmitter(Vec3D o, float l, float w) : Emitter::Emitter(o)

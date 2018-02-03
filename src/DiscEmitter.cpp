@@ -14,6 +14,11 @@ DiscEmitter::DiscEmitter()
 	radius = 1;
 }
 
+DiscEmitter::DiscEmitter(Vec3D o) : Emitter::Emitter(o)
+{
+	radius = 1;
+}
+
 DiscEmitter::DiscEmitter(Vec3D o, float r) : Emitter::Emitter(o)
 {
 	radius = r;
