@@ -379,7 +379,7 @@ void World::spawnParticle(float cur_time)
 		WorldObject * p = new Particle();
 		Particle* pp = (Particle *) p;
 
-		pp = particleEmitter->generateParticle();
+		pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS);
 		pp->setBirth(cur_time);
 		objArray[cur_num_particles] = pp;
 		cur_num_particles++;
