@@ -11,15 +11,14 @@ using namespace std;
 /*----------------------------*/
 Emitter::Emitter()
 {
-	pos = Vec3D();
-	vel = Vec3D();
-	acc = Vec3D(0, -9.8, 0);
-	lifespan = 10; //particles live for 5 seconds
+	origin = Vec3D(0, 5, 0);
 	gen_rate = 0.1; //1 particle every gen_rate seconds
-	mat = Material();
-	size = Vec3D(1, 1, 1);
-	start_vertex_index = 0;
-	total_vertices = 0;
+}
+
+Emitter::Emitter(Vec3D o)
+{
+	origin = o;
+	gen_rate = 0.1;
 }
 
 Emitter::~Emitter()
@@ -29,24 +28,9 @@ Emitter::~Emitter()
 /*----------------------------*/
 // SETTERS
 /*----------------------------*/
-void Emitter::setPos(Vec3D p)
+void Emitter::setOrigin(Vec3D o)
 {
-	pos = p;
-}
-
-void Emitter::setVel(Vec3D v)
-{
-	vel = v;
-}
-
-void Emitter::setAcc(Vec3D a)
-{
-	acc = a;
-}
-
-void Emitter::setLifespan(float l)
-{
-	lifespan = l;
+	origin = o;
 }
 
 void Emitter::setGenRate(float g)
@@ -54,43 +38,12 @@ void Emitter::setGenRate(float g)
 	gen_rate = g;
 }
 
-void Emitter::setMaterial(Material m)
-{
-	mat = m;
-}
-
-void Emitter::setSize(Vec3D s)
-{
-	size = s;
-}
-
-void Emitter::setVertexInfo(int start, int total)
-{
-	start_vertex_index = start;
-	total_vertices = total;
-}
-
 /*----------------------------*/
 // GETTERS
 /*----------------------------*/
-Vec3D Emitter::getPos()
+Vec3D Emitter::getOrigin()
 {
-	return pos;
-}
-
-Vec3D Emitter::getVel()
-{
-	return vel;
-}
-
-Vec3D Emitter::getAcc()
-{
-	return acc;
-}
-
-float Emitter::getLifespan()
-{
-	return lifespan;
+	return origin;
 }
 
 float Emitter::getGenRate()
@@ -98,25 +51,41 @@ float Emitter::getGenRate()
 	return gen_rate;
 }
 
-Vec3D Emitter::getSize()
+/*----------------------------*/
+// VIRTUAL
+/*----------------------------*/
+Vec3D Emitter::generateRandomPos()
 {
-	return size;
+	return origin;
 }
 
 /*----------------------------*/
 // OTHERS
 /*----------------------------*/
-Particle * Emitter::generateParticle()
+Particle * Emitter::generateParticle(int model_start, int model_verts)
 {
+	//~hardcoded particle information~
+	//will later add switch statement between different enums.
+	//i realize having model_start and model_verts as inputs probably isn't the best solution;
+	//maybe Emitter should save cube and sphere indices as member variables instead of world.
+	//but for now i'm sick and am just pushing what i have.
+	//[delete this message later]
+
 	Particle * p = new Particle();
 
-	p->setPos(pos);
-	p->setVel(vel + Vec3D(.1 * (rand()%5), 0, .1 * (rand()%5)));
-	p->setAcc(acc);
-	p->setLifespan(lifespan + (.1 * (rand()%5)));
+	//green sphere
+	Material mat = Material();
+	mat.setAmbient(glm::vec3(0, 1, 0));
+	mat.setDiffuse(glm::vec3(0, 1, 0));
+	mat.setSpecular(glm::vec3(0.75, 0.75, 0.75));
+
+	p->setPos(generateRandomPos());
+	p->setVel(Vec3D(1, 5, 0) + Vec3D(.1 * (rand()%5), 0, .1 * (rand()%5)));
+	p->setAcc(Vec3D(0.0, -9.8, 0.0));
+	p->setLifespan(5 + (.1 * (rand()%5)));
 	p->setMaterial(mat);
-	p->setSize(size);
-	p->setVertexInfo(start_vertex_index, total_vertices);
+	p->setSize(Vec3D(.1, .1, .1));
+	p->setVertexInfo(model_start, model_verts);
 
 	return p;
 }

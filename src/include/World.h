@@ -35,6 +35,10 @@
 #include "Camera.h"
 #include "Util.h"
 #include "Emitter.h"
+#include "PointEmitter.h"
+#include "DiscEmitter.h"
+#include "SphereEmitter.h"
+#include "RectangleEmitter.h"
 #include "Particle.h"
 
 class World{

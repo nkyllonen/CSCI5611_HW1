@@ -16,7 +16,7 @@ World::World()
 	height = 0;
 	floor = 0.0f;
 	particleArray = new Particle*[100];
-	particleEmitter = new Emitter();
+	particleEmitter = new DiscEmitter();
 	total_verts = 0;
 	max_num_particles = 100;
 	cur_num_particles = 0;
@@ -28,7 +28,7 @@ World::World(int max_particles)
 	height = 0;
 	floor = 0.0f;
 	particleArray = new Particle*[max_particles];
-	particleEmitter = new Emitter();
+	particleEmitter = new DiscEmitter();
 	total_verts = 0;
 	max_num_particles = max_particles;
 	cur_num_particles = 0;
@@ -40,7 +40,7 @@ World::World(int w, int h)
 	height = h;
 	floor = 0.0f;
 	particleArray = new Particle*[100];
-	particleEmitter = new Emitter();
+	particleEmitter = new DiscEmitter();
 	total_verts = 0;
 	max_num_particles = 100;
 	cur_num_particles = 0;
@@ -316,23 +316,6 @@ void World::drawFloor()
 }
 
 //
-void World::initEmitter()
-{
-	particleEmitter->setPos(Vec3D(0, 5, 0));
-
-	particleEmitter->setGenRate(3);
-
-	//green sphere
-	Material mat = Material();
-	mat.setAmbient(glm::vec3(0, 1, 0));
-	mat.setDiffuse(glm::vec3(0, 1, 0));
-	mat.setSpecular(glm::vec3(0.75, 0.75, 0.75));
-	particleEmitter->setMaterial(mat);
-
-	particleEmitter->setVertexInfo(CUBE_START, CUBE_VERTS);
-}
-
-//
 void World::updateParticles(float dt, float cur_time)
 {
 	for (int i = 0; i < cur_num_particles; i++)
@@ -393,7 +376,7 @@ void World::spawnParticle(float cur_time)
 	if (cur_num_particles < max_num_particles)
 	{
 		Particle * p;
-		p = particleEmitter->generateParticle();
+		p = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS);
 		p->setBirth(cur_time);
 		particleArray[cur_num_particles] = p;
 		cur_num_particles++;
