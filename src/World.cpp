@@ -316,23 +316,6 @@ void World::drawFloor()
 }
 
 //
-void World::initEmitter()
-{
-	particleEmitter->setPos(Vec3D(0, 5, 0));
-
-	particleEmitter->setGenRate(3);
-
-	//green sphere
-	Material mat = Material();
-	mat.setAmbient(glm::vec3(0, 1, 0));
-	mat.setDiffuse(glm::vec3(0, 1, 0));
-	mat.setSpecular(glm::vec3(0.75, 0.75, 0.75));
-	particleEmitter->setMaterial(mat);
-
-	particleEmitter->setVertexInfo(CUBE_START, CUBE_VERTS);
-}
-
-//
 void World::updateParticles(float dt, float cur_time)
 {
 	for (int i = 0; i < cur_num_particles; i++)

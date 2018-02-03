@@ -163,8 +163,6 @@ int main(int argc, char *argv[]) {
 	float framecount = 0;
 	float fps = 0, last_fps_print = 0.0;
 
-	myWorld->initEmitter();
-
 	while (!quit)
 	{
 		while (SDL_PollEvent(&windowEvent)) {
@@ -212,6 +210,7 @@ int main(int argc, char *argv[]) {
 
 		if (ready_to_emit)
 		{
+			//add a for loop so we can be spawning multiple particles each dt
 			myWorld->spawnParticle(new_time);
 			ready_to_emit = false;
 			last_emission = new_time;
@@ -220,6 +219,7 @@ int main(int argc, char *argv[]) {
 		if ((new_time - last_emission) / 1000.0 >= myWorld->getEmitterGenRate())
 		{
 			ready_to_emit = true;
+			//add "number_to_emit"
 		}
 
 

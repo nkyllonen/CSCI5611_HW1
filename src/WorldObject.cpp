@@ -1,4 +1,8 @@
+#ifdef __APPLE__
+#include "include/WorldObject.h"
+#else
 #include "WorldObject.h"
+#endif
 
 using namespace std;
 
