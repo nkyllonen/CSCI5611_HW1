@@ -342,11 +342,11 @@ void World::updateParticles(float dt, float cur_time)
 			{
 				if (abs(temp_pos.getY() - pos.getY()) > error)
 				{
-					temp_vel = damping * vel;
+					temp_vel = Vec3D(vel.getX() * -1 * damping, vel.getY() * damping, vel.getZ() * -1 * damping);
 				}
 				else //kill tiny bounces
 				{
-					temp_vel = 0.5*damping * vel;
+					temp_vel = Vec3D(vel.getX() * -0.5 * damping, vel.getY() * 0.5 * damping, vel.getZ() * -0.5 * damping);
 				}
 				temp_pos = pos + (dt*temp_vel);
 			}
