@@ -61,18 +61,6 @@ World::~World()
 /*----------------------------*/
 // SETTERS
 /*----------------------------*/
-void World::setCubeIndices(int start, int tris)
-{
-	CUBE_START = start;
-	CUBE_VERTS = tris;
-}
-
-void World::setSphereIndices(int start, int tris)
-{
-	SPHERE_START = start;
-	SPHERE_VERTS = tris;
-}
-
 void World::setFloor(float f)
 {
 	floor = f;
@@ -121,7 +109,8 @@ bool World::loadModelData()
 	//LOAD IN MODELS
 	/////////////////////////////////
 	//CUBE
-	int CUBE_VERTS = 0;
+	CUBE_START = 0;
+	CUBE_VERTS = 0;
 	#ifdef __APPLE__
 	float* cubeData = util::loadModel("../models/cube.txt", CUBE_VERTS);
 	#else
@@ -129,10 +118,10 @@ bool World::loadModelData()
 	#endif
 	cout << "\nNumber of vertices in cube model : " << CUBE_VERTS << endl;
 	total_verts += CUBE_VERTS;
-	setCubeIndices(0, CUBE_VERTS);
 
 	//SPHERE
-	int SPHERE_VERTS = 0;
+	SPHERE_START = CUBE_VERTS;
+	SPHERE_VERTS = 0;
 	#ifdef __APPLE__
 	float* sphereData = util::loadModel("../models/sphere.txt", SPHERE_VERTS);
 	#else
@@ -140,7 +129,6 @@ bool World::loadModelData()
 	#endif
 	cout << "\nNumber of vertices in sphere model : " << SPHERE_VERTS << endl;
 	total_verts += SPHERE_VERTS;
-	setSphereIndices(CUBE_VERTS, SPHERE_VERTS);
 
 	/////////////////////////////////
 	//BUILD MODELDATA ARRAY
