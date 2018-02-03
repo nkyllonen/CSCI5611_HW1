@@ -16,6 +16,7 @@ class Emitter
 protected:
   Vec3D origin;
   float gen_rate; //number of particles to generate per second
+  bool active;
 
 public:
   Emitter();
@@ -30,12 +31,14 @@ public:
   //GETTERS
   Vec3D getOrigin();
   float getGenRate();
+  bool isActive();
 
   //VIRTUAL
   virtual Vec3D generateRandomPos();
 
   //OTHERS
   Particle * generateParticle(int model_start, int model_verts);
+  void changeActive();
 
 };
 #endif

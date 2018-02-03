@@ -362,19 +362,27 @@ void World::updateParticles(float dt, float cur_time)
 //
 void World::spawnParticles(int num_to_emit, float cur_time)
 {
-	for (int i = 0; i < num_to_emit; i++)
+	if (particleEmitter->isActive())
 	{
-		if (cur_num_particles < max_num_particles)
+		for (int i = 0; i < num_to_emit; i++)
 		{
-			WorldObject * p = new Particle();
-			Particle* pp = (Particle *) p;
+			if (cur_num_particles < max_num_particles)
+			{
+				WorldObject * p = new Particle();
+				Particle* pp = (Particle *) p;
 
-			pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS);
-			pp->setBirth(cur_time);
-			objArray[cur_num_particles] = pp;
-			cur_num_particles++;
+				pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS);
+				pp->setBirth(cur_time);
+				objArray[cur_num_particles] = pp;
+				cur_num_particles++;
+			}
 		}
 	}
+}
+
+void World::turnEmitterOnOff()
+{
+	particleEmitter->changeActive();
 }
 
 /*----------------------------*/

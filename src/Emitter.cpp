@@ -13,18 +13,21 @@ Emitter::Emitter()
 {
 	origin = Vec3D(0, 5, 0);
 	gen_rate = 0.1; //1 particle every gen_rate seconds
+	active = true;
 }
 
 Emitter::Emitter(Vec3D o)
 {
 	origin = o;
 	gen_rate = 0.1;
+	active = true;
 }
 
 Emitter::Emitter(Vec3D o, float rate)
 {
 	origin = o;
 	gen_rate = rate;
+	active = true;
 }
 
 Emitter::~Emitter()
@@ -55,6 +58,11 @@ Vec3D Emitter::getOrigin()
 float Emitter::getGenRate()
 {
 	return gen_rate;
+}
+
+bool Emitter::isActive()
+{
+	return active;
 }
 
 /*----------------------------*/
@@ -94,4 +102,9 @@ Particle * Emitter::generateParticle(int model_start, int model_verts)
 	p->setVertexInfo(model_start, model_verts);
 
 	return p;
+}
+
+void Emitter::changeActive()
+{
+	active = !active;
 }

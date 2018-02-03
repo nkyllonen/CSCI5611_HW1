@@ -217,12 +217,11 @@ int main(int argc, char *argv[]) {
 			last_emission = new_time;
 		}
 
-		//printf("Time since last print: %f\n", (new_time - last_fps_print) / 1000.0);
 		if ((new_time - last_fps_print) / 1000.0 >= 1.0) //only print every 1+ seconds
 		{
 			fps = framecount;
 			last_fps_print = new_time;
-			//printf("FPS: %f\n", fps);
+			printf("FPS: %f\n", fps);
 			framecount = 0;
 		}
 
@@ -275,6 +274,12 @@ void onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	case SDLK_a:
 		//printf("A key pressed - step to the left\n");
 		temp_pos = pos - (step_size*right);
+		break;
+	/////////////////////////////////
+	//ACTIVATE/DEACTIVATE EMITTER WITH SPACEBAR
+	/////////////////////////////////
+	case SDLK_SPACE:
+		myWorld->turnEmitterOnOff();
 		break;
 	default:
 		break;
