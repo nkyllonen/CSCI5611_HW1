@@ -34,6 +34,9 @@
 #include "Vec3D.h"
 #include "Camera.h"
 #include "Util.h"
+
+//objects
+#include "WorldObject.h"
 #include "Emitter.h"
 #include "Particle.h"
 
@@ -66,8 +69,8 @@ private:
 	//what lives in this world
 	float * floorData; //array of floor data
 	float floor; //y value of floor
-	
-	Particle ** particleArray = NULL;
+
+	WorldObject ** objArray = NULL;
 	Emitter * particleEmitter;
 
 public:

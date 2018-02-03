@@ -15,7 +15,7 @@ World::World()
 	width = 0;
 	height = 0;
 	floor = 0.0f;
-	particleArray = new Particle*[100];
+	objArray = new WorldObject*[100];
 	particleEmitter = new Emitter();
 	total_verts = 0;
 	max_num_particles = 100;
@@ -27,7 +27,7 @@ World::World(int max_particles)
 	width = 0;
 	height = 0;
 	floor = 0.0f;
-	particleArray = new Particle*[max_particles];
+	objArray = new WorldObject*[max_particles];
 	particleEmitter = new Emitter();
 	total_verts = 0;
 	max_num_particles = max_particles;
@@ -39,7 +39,7 @@ World::World(int w, int h)
 	width = w;
 	height = h;
 	floor = 0.0f;
-	particleArray = new Particle*[100];
+	objArray = new WorldObject*[100];
 	particleEmitter = new Emitter();
 	total_verts = 0;
 	max_num_particles = 100;
@@ -51,9 +51,9 @@ World::~World()
 	delete[] modelData;
 	for (int i = 0; i < cur_num_particles; i++)
 	{
-		delete particleArray[i];
+		delete objArray[i];
 	}
-	delete[] particleArray;
+	delete[] objArray;
 	particleEmitter->~Emitter();
 	//delete floor;
 }
@@ -278,7 +278,7 @@ void World::draw(Camera * cam)
 
 	for (int i = 0; i < cur_num_particles; i++)
 	{
-		particleArray[i]->draw(shaderProgram);
+		objArray[i]->draw(shaderProgram);
 	}
 }
 
@@ -337,21 +337,22 @@ void World::updateParticles(float dt, float cur_time)
 {
 	for (int i = 0; i < cur_num_particles; i++)
 	{
-		Particle * p = particleArray[i]; //ith particle
+		WorldObject * p = objArray[i]; //ith particle
+		Particle* pp = (Particle *) p;
 
-		if ((cur_time - p->getBirth()) / 1000.0 >= p->getLifespan())
+		if ((cur_time - pp->getBirth()) / 1000.0 >= pp->getLifespan())
 		{
 			//kill the particle
-			particleArray[i] = particleArray[cur_num_particles-1]; //set ith spot in array as last particle in the array
-			particleArray[cur_num_particles-1] = NULL;
+			objArray[i] = objArray[cur_num_particles-1]; //set ith spot in array as last particle in the array
+			objArray[cur_num_particles-1] = NULL;
 			cur_num_particles--;
 		}
 		else
 		{
 			//move the particle
-			Vec3D pos = p->getPos();
-			Vec3D vel = p->getVel();
-			Vec3D acc = p->getAcc();
+			Vec3D pos = pp->getPos();
+			Vec3D vel = pp->getVel();
+			Vec3D acc = pp->getAcc();
 
 			//cout << "\tdt = " << dt << "\t pos: ";
 			//pos.print();
@@ -379,10 +380,10 @@ void World::updateParticles(float dt, float cur_time)
 				temp_pos = pos + (dt*temp_vel);
 			}
 
-			p->setPos(temp_pos);
-			p->setVel(temp_vel);
+			pp->setPos(temp_pos);
+			pp->setVel(temp_vel);
 
-			particleArray[i] = p;
+			objArray[i] = pp;
 		}
 	}
 }
@@ -392,10 +393,12 @@ void World::spawnParticle(float cur_time)
 {
 	if (cur_num_particles < max_num_particles)
 	{
-		Particle * p;
-		p = particleEmitter->generateParticle();
-		p->setBirth(cur_time);
-		particleArray[cur_num_particles] = p;
+		WorldObject * p = new Particle();
+		Particle* pp = (Particle *) p;
+
+		pp = particleEmitter->generateParticle();
+		pp->setBirth(cur_time);
+		objArray[cur_num_particles] = pp;
 		cur_num_particles++;
 	}
 }
