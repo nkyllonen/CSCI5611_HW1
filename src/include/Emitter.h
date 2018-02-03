@@ -20,6 +20,7 @@ protected:
 public:
   Emitter();
   Emitter(Vec3D o);
+  Emitter(Vec3D o, float rate);
   ~Emitter();
 
   //SETTERS

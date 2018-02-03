@@ -21,6 +21,12 @@ Emitter::Emitter(Vec3D o)
 	gen_rate = 0.1;
 }
 
+Emitter::Emitter(Vec3D o, float rate)
+{
+	origin = o;
+	gen_rate = rate;
+}
+
 Emitter::~Emitter()
 {
 }

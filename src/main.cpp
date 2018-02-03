@@ -39,6 +39,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <cmath>
 
 //MY CLASSES
 #ifdef __APPLE__
@@ -156,8 +157,8 @@ int main(int argc, char *argv[]) {
 	bool recentering = true;
 	float last_time = SDL_GetTicks(),	delta_time = 0,	new_time = 0;
 	
-	bool ready_to_emit = true;
-	float last_emission;
+	int num_to_emit = 0; 
+	float last_emission = SDL_GetTicks();
 
 	//FPS calculations
 	float framecount = 0;
@@ -208,26 +209,20 @@ int main(int argc, char *argv[]) {
 		last_time = new_time;
 		myWorld->updateParticles(delta_time, new_time);
 
-		if (ready_to_emit)
+		num_to_emit = floor(((new_time - last_emission) / 1000.0) / myWorld->getEmitterGenRate());
+
+		if (num_to_emit > 0)
 		{
-			//add a for loop so we can be spawning multiple particles each dt
-			myWorld->spawnParticle(new_time);
-			ready_to_emit = false;
+			myWorld->spawnParticles(num_to_emit, new_time);
 			last_emission = new_time;
 		}
 
-		if ((new_time - last_emission) / 1000.0 >= myWorld->getEmitterGenRate())
-		{
-			ready_to_emit = true;
-			//add "number_to_emit"
-		}
-
-
+		//printf("Time since last print: %f\n", (new_time - last_fps_print) / 1000.0);
 		if ((new_time - last_fps_print) / 1000.0 >= 1.0) //only print every 1+ seconds
 		{
 			fps = framecount;
 			last_fps_print = new_time;
-			printf("FPS: %f\n", fps);
+			//printf("FPS: %f\n", fps);
 			framecount = 0;
 		}
 

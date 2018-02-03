@@ -94,7 +94,7 @@ int World::getCurNumParticles()
 	return cur_num_particles;
 }
 
-int World::getEmitterGenRate()
+float World::getEmitterGenRate()
 {
 	return particleEmitter->getGenRate();
 }
@@ -360,17 +360,20 @@ void World::updateParticles(float dt, float cur_time)
 }
 
 //
-void World::spawnParticle(float cur_time)
+void World::spawnParticles(int num_to_emit, float cur_time)
 {
-	if (cur_num_particles < max_num_particles)
+	for (int i = 0; i < num_to_emit; i++)
 	{
-		WorldObject * p = new Particle();
-		Particle* pp = (Particle *) p;
+		if (cur_num_particles < max_num_particles)
+		{
+			WorldObject * p = new Particle();
+			Particle* pp = (Particle *) p;
 
-		pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS);
-		pp->setBirth(cur_time);
-		objArray[cur_num_particles] = pp;
-		cur_num_particles++;
+			pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS);
+			pp->setBirth(cur_time);
+			objArray[cur_num_particles] = pp;
+			cur_num_particles++;
+		}
 	}
 }
 

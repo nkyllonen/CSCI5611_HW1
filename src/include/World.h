@@ -95,7 +95,7 @@ public:
 	int getHeight();
 	int getMaxNumParticles();
 	int getCurNumParticles();
-	int getEmitterGenRate();
+	float getEmitterGenRate();
 
 	//OTHERS
 	bool loadModelData();
@@ -105,7 +105,7 @@ public:
 	void drawFloor();
 	void initEmitter();
 	void updateParticles(float dt, float cur_time);
-	void spawnParticle(float cur_time);
+	void spawnParticles(int num_to_emit, float cur_time);
 
 };
 
