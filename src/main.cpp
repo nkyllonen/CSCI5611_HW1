@@ -68,8 +68,10 @@ string vertFile = "Shaders/phong.vert";
 string fragFile = "Shaders/phong.frag";
 #endif
 
+//other globals
 const float mouse_speed = 0.05f;
 const float step_size = 0.15f;
+int type = WATER_EMITTER;
 
 /*=============================*/
 // Helper Functions
@@ -159,8 +161,6 @@ int main(int argc, char *argv[]) {
 	
 	int num_to_emit = 0; 
 	float last_emission = SDL_GetTicks();
-
-	int type = WATER_EMITTER;
 
 	//FPS calculations
 	float framecount = 0;
@@ -306,6 +306,15 @@ void onKeyDown(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 		break;
 	case SDLK_p:
 		myWorld->setEmitterToRectangle();
+		break;
+	/////////////////////////////////
+	//CHANGE EMITTER TYPE WITH JK
+	/////////////////////////////////
+	case SDLK_j:
+		type = WATER_EMITTER;
+		break;
+	case SDLK_k:
+		type = FIRE_EMITTER;
 		break;
 	default:
 		break;
