@@ -110,7 +110,7 @@ public:
 	void drawFloor();
 	void initEmitter();
 	void updateParticles(float dt, float cur_time);
-	void spawnParticles(int num_to_emit, float cur_time);
+	void spawnParticles(int num_to_emit, float cur_time, int type);
 	void turnEmitterOnOff();
 
 };

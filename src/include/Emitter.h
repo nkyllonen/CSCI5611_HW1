@@ -5,11 +5,11 @@
 #include "Material.h"
 #include "Particle.h"
 
-// enum EMITTER_type
-// {
-//   WATER_EMITTER,
-//   FIRE_EMITTER
-// };
+enum EMITTER_type
+{
+  WATER_EMITTER,
+  FIRE_EMITTER
+};
 
 class Emitter
 {
@@ -38,7 +38,7 @@ public:
   virtual Vec3D generateRandomPos();
 
   //OTHERS
-  Particle * generateParticle(int model_start, int model_verts);
+  Particle * generateParticle(int model_start, int model_verts, int type);
   void changeActive();
 
 };

@@ -401,7 +401,7 @@ void World::updateParticles(float dt, float cur_time)
 }
 
 //
-void World::spawnParticles(int num_to_emit, float cur_time)
+void World::spawnParticles(int num_to_emit, float cur_time, int type)
 {
 	if (particleEmitter->isActive())
 	{
@@ -412,7 +412,7 @@ void World::spawnParticles(int num_to_emit, float cur_time)
 				WorldObject * p = new Particle();
 				Particle* pp = (Particle *) p;
 
-				pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS);
+				pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS, type);
 				pp->setBirth(cur_time);
 				objArray[cur_num_particles] = pp;
 				cur_num_particles++;

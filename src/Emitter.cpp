@@ -81,7 +81,7 @@ Vec3D Emitter::generateRandomPos()
 /*----------------------------*/
 // OTHERS
 /*----------------------------*/
-Particle * Emitter::generateParticle(int model_start, int model_verts)
+Particle * Emitter::generateParticle(int model_start, int model_verts, int type)
 {
 	//~hardcoded particle information~
 	//will later add switch statement between different enums.
@@ -92,16 +92,34 @@ Particle * Emitter::generateParticle(int model_start, int model_verts)
 
 	Particle * p = new Particle();
 
-	//green sphere
 	Material mat = Material();
-	mat.setAmbient(glm::vec3(0, 1, 0));
-	mat.setDiffuse(glm::vec3(0, 1, 0));
-	mat.setSpecular(glm::vec3(0.75, 0.75, 0.75));
+	Vec3D vel;
+	Vec3D acc;
+	float lifespan;
+
+	if (type == WATER_EMITTER)
+	{
+		mat.setAmbient(glm::vec3(0, 0, 1));
+		mat.setDiffuse(glm::vec3(0, 0, 1));
+		mat.setSpecular(glm::vec3(0.75, 0.75, 0.75));
+		vel = Vec3D(1 + .1 * (rand()%5), 5, .1 * (rand()%5));
+		acc = Vec3D(0.0, -9.8, 0.0);
+		lifespan = 5 + (.1 * (rand()%5));
+	}
+	else if (type == FIRE_EMITTER)
+	{
+		mat.setAmbient(glm::vec3(1, 0, 0));
+		mat.setDiffuse(glm::vec3(1, 0, 0));
+		mat.setSpecular(glm::vec3(0.75, 0.75, 0.75));
+		vel = Vec3D(0.0, 5.0, 0.0);
+		acc = Vec3D();
+		lifespan = 1 + (.1 * (rand()%5));
+	}
 
 	p->setPos(generateRandomPos());
-	p->setVel(Vec3D(1, 5, 0) + Vec3D(.1 * (rand()%5), 0, .1 * (rand()%5)));
-	p->setAcc(Vec3D(0.0, -9.8, 0.0));
-	p->setLifespan(5 + (.1 * (rand()%5)));
+	p->setVel(vel);
+	p->setAcc(acc);
+	p->setLifespan(lifespan);
 	p->setMaterial(mat);
 	p->setSize(Vec3D(.1, .1, .1));
 	p->setVertexInfo(model_start, model_verts);
