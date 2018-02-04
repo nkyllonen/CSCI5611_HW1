@@ -90,6 +90,7 @@ public:
 	void setFloor(float f);
 	void setCurNumParticles(int num);
 	void setEmitterGenRate(float rate);
+	void setEmitterType(int num);
 
 	//GETTERS
 	int getWidth();

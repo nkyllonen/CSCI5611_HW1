@@ -156,8 +156,8 @@ int main(int argc, char *argv[]) {
 	bool mouse_active = false;
 	bool recentering = true;
 	float last_time = SDL_GetTicks(),	delta_time = 0,	new_time = 0;
-	
-	int num_to_emit = 0; 
+
+	int num_to_emit = 0;
 	float last_emission = SDL_GetTicks();
 
 	//FPS calculations
@@ -290,7 +290,26 @@ void onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	case SDLK_DOWN:
 		myWorld->setEmitterGenRate(myWorld->getEmitterGenRate() * 2);
 		break;
+	/////////////////////////////////
+	//CHANGE PARTICLE TYPE WITH #S
+	/////////////////////////////////
+	case SDLK_1:
+	case SDLK_KP_1:
+		//default emitter type
+		myWorld->setEmitterType(DEFAULT_EMITTER);
+		break;
+	case SDLK_2:
+	case SDLK_KP_2:
+		//water emitter type
+		myWorld->setEmitterType(WATER_EMITTER);
+		break;
+	case SDLK_3:
+	case SDLK_KP_3:
+		//fire emitter type
+		myWorld->setEmitterType(FIRE_EMITTER);
+		break;
 	default:
+		printf("ERROR: Invalid key pressed (%s)\n", SDL_GetKeyName(event.keysym.sym));
 		break;
 	}//END switch key press
 

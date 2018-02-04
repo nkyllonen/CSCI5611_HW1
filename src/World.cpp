@@ -76,6 +76,11 @@ void World::setEmitterGenRate(float rate)
 	particleEmitter->setGenRate(rate);
 }
 
+void World::setEmitterType(int num)
+{
+	particleEmitter->setType(num);
+}
+
 /*----------------------------*/
 // GETTERS
 /*----------------------------*/
@@ -311,6 +316,11 @@ void World::drawFloor()
 //
 void World::updateParticles(float dt, float cur_time)
 {
+	Vec3D pos, vel, acc;
+	Vec3D temp_pos, temp_vel;
+	float damping = 0.0, error = 0.02;
+	Vec3D newColor;
+
 	for (int i = 0; i < cur_num_particles; i++)
 	{
 		WorldObject * p = objArray[i]; //ith particle
@@ -326,18 +336,18 @@ void World::updateParticles(float dt, float cur_time)
 		else
 		{
 			//move the particle
-			Vec3D pos = pp->getPos();
-			Vec3D vel = pp->getVel();
-			Vec3D acc = pp->getAcc();
-
-			//cout << "\tdt = " << dt << "\t pos: ";
-			//pos.print();
+			pos = pp->getPos();
+			vel = pp->getVel();
+			acc = pp->getAcc();
+			damping = pp->getDamping();
 
 			//temp
-			Vec3D temp_pos = pos + (dt*vel);
-			Vec3D temp_vel;
+			temp_pos = pos + (dt*vel);
+			temp_vel;
 
-			float error = 0.02, damping = -0.70;
+			//for color changing
+			float age = (cur_time - pp->getBirth()) / 1000.0;
+			newColor = particleEmitter->generateNewColor(age);
 
 			if (temp_pos.getY() > floor)
 			{
@@ -358,6 +368,7 @@ void World::updateParticles(float dt, float cur_time)
 
 			pp->setPos(temp_pos);
 			pp->setVel(temp_vel);
+			pp->setColor(newColor);
 
 			objArray[i] = pp;
 		}

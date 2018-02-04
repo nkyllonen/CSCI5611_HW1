@@ -215,3 +215,32 @@ GLuint util::LoadTexture(const char * texFile)
 
 	return tex;
 }
+
+/*--------------------------------------------------------------*/
+// colorInterp2 : return new color, t away from color1 to color2
+/*--------------------------------------------------------------*/
+Vec3D util::colorInterp2(Vec3D color1, Vec3D color2, float t)
+{
+	float x1 = color1.getX(), y1 = color1.getY(), z1 = color1.getZ();
+	float x2 = color2.getX(), y2 = color2.getY(), z2 = color2.getZ();
+
+	return Vec3D(
+					x1 + (x2 - x1) * t,
+					y1 + (y2 - y1) * t,
+					z1 + (z2 - z1) * t);
+}
+
+/*--------------------------------------------------------------*/
+// colorInterp3 : return new color, t away from color1
+/*--------------------------------------------------------------*/
+Vec3D util::colorInterp3(Vec3D color1, Vec3D color2, Vec3D color3, float t)
+{
+	if (t < 0.5)
+	{
+		return colorInterp2(color1, color2, t*2);
+	}
+	else
+	{
+		return colorInterp2(color2, color3, (t-0.5)*2);
+	}
+}

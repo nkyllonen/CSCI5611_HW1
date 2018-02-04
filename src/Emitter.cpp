@@ -14,6 +14,7 @@ Emitter::Emitter()
 	origin = Vec3D(0, 5, 0);
 	gen_rate = 0.1; //1 particle every gen_rate seconds
 	active = true;
+	type = DEFAULT_EMITTER;
 }
 
 Emitter::Emitter(Vec3D o)
@@ -21,6 +22,7 @@ Emitter::Emitter(Vec3D o)
 	origin = o;
 	gen_rate = 0.1;
 	active = true;
+	type = DEFAULT_EMITTER;
 }
 
 Emitter::Emitter(Vec3D o, float rate)
@@ -28,10 +30,40 @@ Emitter::Emitter(Vec3D o, float rate)
 	origin = o;
 	gen_rate = rate;
 	active = true;
+	type = DEFAULT_EMITTER;
 }
 
 Emitter::~Emitter()
 {
+}
+
+/*----------------------------*/
+// PROTECTED
+/*----------------------------*/
+void Emitter::resetColors()
+{
+	switch (type) {
+		case WATER_EMITTER:
+		color1 = Vec3D(1.0,1.0,1.0);
+		color2 = Vec3D(0.0,0.1,0.8);
+		color3 = Vec3D();
+		break;
+		case FIRE_EMITTER:
+		color1 = Vec3D(1.0,1.0,1.0);
+		color2 = Vec3D(0.5,0.5,0.0);
+		color3 = Vec3D(1.0,0.0,0.0);
+		break;
+		case DEFAULT_EMITTER:
+		color1 = Vec3D();
+		color2 = Vec3D();
+		color3 = Vec3D();
+		break;
+		default:
+		cout << "ERROR: reached default case in Emitter::resetColors()" << endl;
+		color1 = Vec3D();
+		color2 = Vec3D();
+		color3 = Vec3D();
+	}
 }
 
 /*----------------------------*/
@@ -45,6 +77,12 @@ void Emitter::setOrigin(Vec3D o)
 void Emitter::setGenRate(float g)
 {
 	gen_rate = g;
+}
+
+void Emitter::setType(int num)
+{
+	type = num;
+	resetColors();
 }
 
 /*----------------------------*/
@@ -63,6 +101,11 @@ float Emitter::getGenRate()
 bool Emitter::isActive()
 {
 	return active;
+}
+
+int Emitter::getType()
+{
+	return type;
 }
 
 /*----------------------------*/
@@ -100,6 +143,7 @@ Particle * Emitter::generateParticle(int model_start, int model_verts)
 	p->setMaterial(mat);
 	p->setSize(Vec3D(.1, .1, .1));
 	p->setVertexInfo(model_start, model_verts);
+	p->setDamping(-0.7);
 
 	return p;
 }
@@ -107,4 +151,19 @@ Particle * Emitter::generateParticle(int model_start, int model_verts)
 void Emitter::changeActive()
 {
 	active = !active;
+}
+
+Vec3D Emitter::generateNewColor(float t)
+{
+	switch (type) {
+		case WATER_EMITTER:
+		return util::colorInterp2(color1, color2, t);
+		case FIRE_EMITTER:
+		return util::colorInterp3(color1, color2, color3, t);
+		case DEFAULT_EMITTER:
+		return color1;
+		default:
+		cout << "ERROR: reached default case in Emitter::generateNewColor()" << endl;
+		return color1;
+	}
 }
