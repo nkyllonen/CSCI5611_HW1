@@ -69,6 +69,7 @@ private:
 	GLuint shaderProgram;
 	GLuint tex0;
 	GLuint tex1;
+	GLuint tex2;
 
 	//what lives in this world
 	float * floorData; //array of floor data

@@ -50,7 +50,7 @@ void Emitter::resetColors()
 		break;
 		case FIRE_EMITTER:
 		color1 = Vec3D(1.0,1.0,1.0);
-		color2 = Vec3D(0.5,0.5,0.0);
+		color2 = Vec3D(1.0,0.9,0.0);
 		color3 = Vec3D(1.0,0.3,0.0);
 		break;
 		case DEFAULT_EMITTER:
@@ -142,7 +142,7 @@ Particle * Emitter::generateParticle(int model_start, int model_verts)
 		case FIRE_EMITTER:
 			vel = Vec3D(0.0, 1.0, 0.0);
 			origin = Vec3D(0,0.1,0);
-			lifespan = 10 + (.1 * (rand()%5));
+			lifespan = 5 + (.1 * (rand()%5));
 			acc = Vec3D((rand()%20 - 10)/50.0, 1.0e-4,(rand()%20 - 10)/50.0);
 			break;
 		case DEFAULT_EMITTER:

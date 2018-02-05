@@ -228,12 +228,14 @@ bool World::setupGraphics()
 	#ifdef __APPLE__
 	tex0 = util::LoadTexture("../textures/wood.bmp");
 	tex1 = util::LoadTexture("../textures/grey_stones.bmp");
+	tex2 = util::LoadTexture("../textures/uniformclouds.bmp");
 	#else
 	tex0 = util::LoadTexture("textures/wood.bmp");
 	tex1 = util::LoadTexture("textures/grey_stones.bmp");
+	tex2 = util::LoadTexture("textures/uniformclouds.bmp");
 	#endif
 
-	if (tex0 == -1 || tex1 == -1 || shaderProgram == -1)
+	if (tex0 == -1 || tex1 == -1 || tex2 == -1 || shaderProgram == -1)
 	{
 		cout << "\nERROR. Failed to load texture(s)" << endl;
 		printf(strerror(errno));
@@ -294,19 +296,14 @@ void World::draw(Camera * cam)
 	glBindTexture(GL_TEXTURE_2D, tex1);
 	glUniform1i(glGetUniformLocation(shaderProgram, "tex1"), 1);
 
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, tex2);
+	glUniform1i(glGetUniformLocation(shaderProgram, "tex2"), 2);
+
 	glBindVertexArray(vao);
 
-	/*for (int i = 0; i < width*height; i++)
-	{
-			glUniform1i(uniTexID, 0); //Set texture ID to use (0 = wood texture)
-			objects_array[i]->draw(cam, shaderProgram);
-	}//END for loop
-
-	glUniform1i(uniTexID, 1); //Set texture ID to use for floor (1 = brick texture)
-	floor->draw(cam, shaderProgram);*/
-
 	//draw floor
-	drawFloor();
+	//drawFloor();
 
 	glUniform1i(uniTexID, -1); //Set texture ID to use (0 = wood texture, -1 = no texture)
 
@@ -382,7 +379,7 @@ void World::updateParticles(float dt, float cur_time)
 			temp_vel;
 
 			//for color changing
-			float age = (cur_time - pp->getBirth()) / 1000.0;
+			float age = (cur_time - pp->getBirth()) / 1000.0 / pp->getLifespan();
 			newColor = particleEmitter->generateNewColor(age);
 
 			if (temp_pos.getY() > floor)
