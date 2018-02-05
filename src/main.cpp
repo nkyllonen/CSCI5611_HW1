@@ -104,7 +104,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	World* myWorld = new World(max_num_particles);
-	myWorld->createFloorData();
 
 	/////////////////////////////////
 	//LOAD MODEL DATA INTO WORLD

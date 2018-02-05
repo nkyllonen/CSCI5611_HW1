@@ -9,6 +9,7 @@
 enum WOBJ_type
 {
 	PARTICLE_WOBJ,
+	QUAD_WOBJ,
 	DEFAULT_WOBJ
 };
 

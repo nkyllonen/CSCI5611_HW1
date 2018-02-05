@@ -59,13 +59,15 @@ float* util::loadModel(string filename, int& num_verts)
 	modelFile >> numLines; //first number in the model file is the number of lines
 
 	float* m_array = new float[numLines];
-	for (int i = 0; i < numLines; i++) {
+	for (int i = 0; i < numLines; i++)
+	{
 		modelFile >> m_array[i];
 	}
 
 	cout << "\nLoaded model file " << filename << " successfully." << endl;
 
 	printf("Lines : %d\n", numLines);
+	//each vertex has pos (3f) + norm (3) + texture coords (u,v) = 8 floats
 	num_verts = numLines / 8;
 	modelFile.close();
 
@@ -232,15 +234,17 @@ Vec3D util::colorInterp2(Vec3D color1, Vec3D color2, float t)
 
 /*--------------------------------------------------------------*/
 // colorInterp3 : return new color, t away from color1
+//			- t_split being the placement of color2 between 1 and 3
 /*--------------------------------------------------------------*/
-Vec3D util::colorInterp3(Vec3D color1, Vec3D color2, Vec3D color3, float t)
+Vec3D util::colorInterp3(Vec3D color1, Vec3D color2, Vec3D color3, float t, float t_split)
 {
-	if (t < 0.5)
+	printf("t : %f\n", t);
+	if (t < t_split)
 	{
-		return colorInterp2(color1, color2, t*2);
+		return colorInterp2(color1, color2, t/t_split);
 	}
 	else
 	{
-		return colorInterp2(color2, color3, (t-0.5)*2);
+		return colorInterp2(color2, color3, (t-t_split)/(1.0-t_split));
 	}
 }

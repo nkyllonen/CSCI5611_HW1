@@ -184,7 +184,7 @@ Vec3D Emitter::generateNewColor(float t)
 		case WATER_EMITTER:
 		return util::colorInterp2(color1, color2, t);
 		case FIRE_EMITTER:
-		return util::colorInterp3(color1, color2, color3, t);
+		return util::colorInterp3(color1, color2, color3, t, 0.1);
 		case DEFAULT_EMITTER:
 		return color1;
 		default:

@@ -59,7 +59,7 @@ namespace util
 
 	//
 	Vec3D colorInterp2(Vec3D color1, Vec3D color2, float t);
-	Vec3D colorInterp3(Vec3D color1, Vec3D color2, Vec3D color3, float t);
+	Vec3D colorInterp3(Vec3D color1, Vec3D color2, Vec3D color3, float t, float t_split);
 }
 
 #endif

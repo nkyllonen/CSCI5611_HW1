@@ -43,6 +43,7 @@
 #include "SphereEmitter.h"
 #include "RectangleEmitter.h"
 #include "Particle.h"
+#include "Quad.h"
 
 class World{
 private:
@@ -60,6 +61,8 @@ private:
 	int CUBE_VERTS = 0;
 	int SPHERE_START = 0;
 	int SPHERE_VERTS = 0;
+	int QUAD_START = 0;
+	int QUAD_VERTS = 0;
 
 	//VAO and VBO GLuints
 	GLuint vao;
@@ -72,11 +75,13 @@ private:
 	GLuint tex2;
 
 	//what lives in this world
-	float * floorData; //array of floor data
-	float floor; //y value of floor
-
+	Quad * floor;
 	WorldObject ** objArray = NULL;
 	Emitter * particleEmitter;
+
+	//PRIVATE FUNCTIONS
+	float* createQuadData(int& verts);
+	void setUpFloor();
 
 public:
 	//CONSTRUCTORS AND DESTRUCTORS
@@ -108,8 +113,6 @@ public:
 	bool loadModelData();
 	bool setupGraphics();
 	void draw(Camera * cam);
-	void createFloorData();
-	void drawFloor();
 	void initEmitter();
 	void updateParticles(float dt, float cur_time);
 	void spawnParticles(int num_to_emit, float cur_time);
