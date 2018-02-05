@@ -85,36 +85,44 @@ void World::setEmitterToPoint()
 {
 	float rate = particleEmitter->getGenRate();
 	bool act = particleEmitter->isActive();
+	int type = particleEmitter->getType();
 	particleEmitter = new PointEmitter(particleEmitter->getOrigin());
 	particleEmitter->setGenRate(rate);
 	particleEmitter->setActive(act);
+	particleEmitter->setType(type);
 }
 
 void World::setEmitterToDisc()
 {
 	float rate = particleEmitter->getGenRate();
 	bool act = particleEmitter->isActive();
+	int type = particleEmitter->getType();
 	particleEmitter = new DiscEmitter(particleEmitter->getOrigin());
 	particleEmitter->setGenRate(rate);
 	particleEmitter->setActive(act);
+	particleEmitter->setType(type);
 }
 
 void World::setEmitterToSphere()
 {
 	float rate = particleEmitter->getGenRate();
 	bool act = particleEmitter->isActive();
+	int type = particleEmitter->getType();
 	particleEmitter = new SphereEmitter(particleEmitter->getOrigin());
 	particleEmitter->setGenRate(rate);
 	particleEmitter->setActive(act);
+	particleEmitter->setType(type);
 }
 
 void World::setEmitterToRectangle()
 {
 	float rate = particleEmitter->getGenRate();
 	bool act = particleEmitter->isActive();
+	int type = particleEmitter->getType();
 	particleEmitter = new RectangleEmitter(particleEmitter->getOrigin());
 	particleEmitter->setGenRate(rate);
 	particleEmitter->setActive(act);
+	particleEmitter->setType(type);
 }
 
 /*----------------------------*/
@@ -355,7 +363,6 @@ void World::updateParticles(float dt, float cur_time)
 
 			//temp
 			temp_pos = pos + (dt*vel);
-			temp_vel;
 
 			//for color changing
 			float age = (cur_time - pp->getBirth()) / 1000.0 / pp->getLifespan();
@@ -398,8 +405,23 @@ void World::spawnParticles(int num_to_emit, float cur_time)
 			{
 				WorldObject * p = new Particle();
 				Particle* pp = (Particle *) p;
-
-				pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS);
+				switch (particleEmitter->getType())
+				{
+					case BALL_EMITTER:
+					pp = particleEmitter->generateParticle(SPHERE_START, SPHERE_VERTS);
+					break;
+					case WATER_EMITTER:
+					pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS);
+					break;
+					case FIRE_EMITTER:
+					pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS);
+					break;
+					case DEFAULT_EMITTER:
+					pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS);
+					break;
+					default:
+					pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS);
+				}
 				pp->setBirth(cur_time);
 				objArray[cur_num_particles] = pp;
 				cur_num_particles++;
