@@ -43,6 +43,11 @@ Emitter::~Emitter()
 void Emitter::resetColors()
 {
 	switch (particle_type) {
+		case BALL_EMITTER:
+		color1 = Vec3D(1,0,0);
+		color2 = Vec3D(1,0,0);
+		color3 = Vec3D(1,0,0);
+		break;
 		case WATER_EMITTER:
 		color1 = Vec3D(1.0,1.0,1.0);
 		color2 = Vec3D(0.0,0.1,0.8);
@@ -129,29 +134,39 @@ Particle * Emitter::generateParticle(int model_start, int model_verts)
 	Particle * p = new Particle();
 
 	Material mat = Material();
-	Vec3D vel, acc;
+	Vec3D vel, acc, size;
 	float lifespan;
 
 	switch (particle_type) {
+		case BALL_EMITTER:
+			vel = Vec3D(-1 + .1 * (rand()%10), 0, -1 + .1 * (rand()%10));
+			origin = Vec3D(0,5,0);
+			lifespan = 10;
+			acc = Vec3D(0,-9.8,0);
+			size = Vec3D(1.0,1.0,1.0);
+			break;
 		case WATER_EMITTER:
 			vel = Vec3D(1 + .1 * (rand()%5), 5, .1 * (rand()%5));
 			origin = Vec3D(0,5,0);
 			lifespan = 5 + (.1 * (rand()%5));
 			acc = Vec3D(0,-9.8,0);
+			size = Vec3D(.1,.1,.1);
 			break;
 		case FIRE_EMITTER:
 			vel = Vec3D(0.0, 1.0, 0.0);
 			origin = Vec3D(0,0.1,0);
 			lifespan = 5 + (.1 * (rand()%5));
 			acc = Vec3D((rand()%20 - 10)/50.0, 1.0e-4,(rand()%20 - 10)/50.0);
+			size = Vec3D(.1,.1,.1);
 			break;
 		case DEFAULT_EMITTER:
 			vel = Vec3D(1 + .1 * (rand()%5), 5, .1 * (rand()%5));
 			origin = Vec3D(0,5,0);
 			lifespan = 5 + (.1 * (rand()%5));
 			acc = Vec3D(0,-9.8,0);
+			size = Vec3D(.1,.1,.1);
 			break;
-		defualt:
+		default:
 			break;
 	}
 
@@ -166,7 +181,7 @@ Particle * Emitter::generateParticle(int model_start, int model_verts)
 	p->setAcc(acc);
 	p->setLifespan(lifespan);
 	p->setMaterial(mat);
-	p->setSize(Vec3D(.1, .1, .1));
+	p->setSize(size);
 	p->setVertexInfo(model_start, model_verts);
 	p->setDamping(-0.7);
 
@@ -181,6 +196,8 @@ void Emitter::changeActive()
 Vec3D Emitter::generateNewColor(float t)
 {
 	switch (particle_type) {
+		case BALL_EMITTER:
+		return color1;
 		case WATER_EMITTER:
 		return util::colorInterp2(color1, color2, t);
 		case FIRE_EMITTER:

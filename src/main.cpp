@@ -150,7 +150,7 @@ int main(int argc, char *argv[]) {
 	/*===========================================================================================
 	* EVENT LOOP (Loop forever processing each event as fast as possible)
 	* List of keycodes: https://wiki.libsdl.org/SDL_Keycode - You can catch many special keys
-	* Scancode referes to a keyboard position, keycode referes to the letter (e.g., EU keyboards)
+	* Scancode refers to a keyboard position, keycode refers to the letter (e.g., EU keyboards)
 	===========================================================================================*/
 	SDL_Event windowEvent;
 	bool quit = false;
@@ -298,16 +298,25 @@ void onKeyDown(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	case SDLK_KP_1:
 		//default emitter type
 		myWorld->setEmitterType(DEFAULT_EMITTER);
+		myWorld->setEmitterGenRate(.1);
 		break;
 	case SDLK_2:
 	case SDLK_KP_2:
-		//water emitter type
-		myWorld->setEmitterType(WATER_EMITTER);
+		//ball emitter type
+		myWorld->setEmitterType(BALL_EMITTER);
+		myWorld->setEmitterGenRate(5);
 		break;
 	case SDLK_3:
 	case SDLK_KP_3:
+		//water emitter type
+		myWorld->setEmitterType(WATER_EMITTER);
+		myWorld->setEmitterGenRate(.1);
+		break;
+	case SDLK_4:
+	case SDLK_KP_4:
 		//fire emitter type
 		myWorld->setEmitterType(FIRE_EMITTER);
+		myWorld->setEmitterGenRate(.1);
 		break;
 	/////////////////////////////////
 	case SDLK_u:
