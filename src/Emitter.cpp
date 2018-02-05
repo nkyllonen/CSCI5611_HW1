@@ -14,7 +14,7 @@ Emitter::Emitter()
 	origin = Vec3D(0, 5, 0);
 	gen_rate = 0.1; //1 particle every gen_rate seconds
 	active = true;
-	type = DEFAULT_EMITTER;
+	particle_type = DEFAULT_EMITTER;
 }
 
 Emitter::Emitter(Vec3D o)
@@ -22,7 +22,7 @@ Emitter::Emitter(Vec3D o)
 	origin = o;
 	gen_rate = 0.1;
 	active = true;
-	type = DEFAULT_EMITTER;
+	particle_type = DEFAULT_EMITTER;
 }
 
 Emitter::Emitter(Vec3D o, float rate)
@@ -30,7 +30,7 @@ Emitter::Emitter(Vec3D o, float rate)
 	origin = o;
 	gen_rate = rate;
 	active = true;
-	type = DEFAULT_EMITTER;
+	particle_type = DEFAULT_EMITTER;
 }
 
 Emitter::~Emitter()
@@ -42,7 +42,7 @@ Emitter::~Emitter()
 /*----------------------------*/
 void Emitter::resetColors()
 {
-	switch (type) {
+	switch (particle_type) {
 		case WATER_EMITTER:
 		color1 = Vec3D(1.0,1.0,1.0);
 		color2 = Vec3D(0.0,0.1,0.8);
@@ -51,7 +51,7 @@ void Emitter::resetColors()
 		case FIRE_EMITTER:
 		color1 = Vec3D(1.0,1.0,1.0);
 		color2 = Vec3D(0.5,0.5,0.0);
-		color3 = Vec3D(1.0,0.0,0.0);
+		color3 = Vec3D(1.0,0.3,0.0);
 		break;
 		case DEFAULT_EMITTER:
 		color1 = Vec3D();
@@ -81,8 +81,13 @@ void Emitter::setGenRate(float g)
 
 void Emitter::setType(int num)
 {
-	type = num;
+	particle_type = num;
 	resetColors();
+}
+
+void Emitter::setActive(bool b)
+{
+	active = b;
 }
 
 /*----------------------------*/
@@ -105,7 +110,7 @@ bool Emitter::isActive()
 
 int Emitter::getType()
 {
-	return type;
+	return particle_type;
 }
 
 /*----------------------------*/
@@ -121,25 +126,45 @@ Vec3D Emitter::generateRandomPos()
 /*----------------------------*/
 Particle * Emitter::generateParticle(int model_start, int model_verts)
 {
-	//~hardcoded particle information~
-	//will later add switch statement between different enums.
-	//i realize having model_start and model_verts as inputs probably isn't the best solution;
-	//maybe Emitter should save cube and sphere indices as member variables instead of world.
-	//but for now i'm sick and am just pushing what i have.
-	//[delete this message later]
-
 	Particle * p = new Particle();
 
-	//green sphere
 	Material mat = Material();
-	mat.setAmbient(glm::vec3(0, 1, 0));
-	mat.setDiffuse(glm::vec3(0, 1, 0));
+	Vec3D vel, acc;
+	float lifespan;
+
+	switch (particle_type) {
+		case WATER_EMITTER:
+			vel = Vec3D(1 + .1 * (rand()%5), 5, .1 * (rand()%5));
+			origin = Vec3D(0,5,0);
+			lifespan = 5 + (.1 * (rand()%5));
+			acc = Vec3D(0,-9.8,0);
+			break;
+		case FIRE_EMITTER:
+			vel = Vec3D(0.0, 1.0, 0.0);
+			origin = Vec3D(0,0.1,0);
+			lifespan = 10 + (.1 * (rand()%5));
+			acc = Vec3D((rand()%20 - 10)/50.0, 1.0e-4,(rand()%20 - 10)/50.0);
+			break;
+		case DEFAULT_EMITTER:
+			vel = Vec3D(1 + .1 * (rand()%5), 5, .1 * (rand()%5));
+			origin = Vec3D(0,5,0);
+			lifespan = 5 + (.1 * (rand()%5));
+			acc = Vec3D(0,-9.8,0);
+			break;
+		defualt:
+			break;
+	}
+
+	//change mat properties
+	resetColors();
+	mat.setAmbient(util::vec3DtoGLM(color1));
+	mat.setDiffuse(util::vec3DtoGLM(color1));
 	mat.setSpecular(glm::vec3(0.75, 0.75, 0.75));
 
 	p->setPos(generateRandomPos());
-	p->setVel(Vec3D(1, 5, 0) + Vec3D(.1 * (rand()%5), 0, .1 * (rand()%5)));
-	p->setAcc(Vec3D(0.0, -9.8, 0.0));
-	p->setLifespan(5 + (.1 * (rand()%5)));
+	p->setVel(vel);
+	p->setAcc(acc);
+	p->setLifespan(lifespan);
 	p->setMaterial(mat);
 	p->setSize(Vec3D(.1, .1, .1));
 	p->setVertexInfo(model_start, model_verts);
@@ -155,7 +180,7 @@ void Emitter::changeActive()
 
 Vec3D Emitter::generateNewColor(float t)
 {
-	switch (type) {
+	switch (particle_type) {
 		case WATER_EMITTER:
 		return util::colorInterp2(color1, color2, t);
 		case FIRE_EMITTER:

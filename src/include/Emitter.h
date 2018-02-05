@@ -24,7 +24,7 @@ protected:
   Vec3D color1;
   Vec3D color2;
   Vec3D color3;
-  int type;
+  int particle_type;
 
   //PRIVATE
   void resetColors();
@@ -39,6 +39,7 @@ public:
   void setOrigin(Vec3D o);
   void setGenRate(float g);
   void setType(int num);
+  void setActive(bool b);
 
   //GETTERS
   Vec3D getOrigin();

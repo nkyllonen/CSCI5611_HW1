@@ -68,13 +68,14 @@ string vertFile = "Shaders/phong.vert";
 string fragFile = "Shaders/phong.frag";
 #endif
 
+//other globals
 const float mouse_speed = 0.05f;
 const float step_size = 0.15f;
 
 /*=============================*/
 // Helper Functions
 /*=============================*/
-void onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld);
+void onKeyDown(SDL_KeyboardEvent & event, Camera* cam, World* myWorld);
 void mouseMove(SDL_MouseMotionEvent & event, Camera * player, float horizontal_angle, float vertical_angle);
 
 /*==============================================================*/
@@ -176,7 +177,7 @@ int main(int argc, char *argv[]) {
 				//check for escape or fullscreen before checking other commands
 				if (windowEvent.key.keysym.sym == SDLK_ESCAPE) quit = true; //Exit event loop
 				else if (windowEvent.key.keysym.sym == SDLK_f) fullscreen = !fullscreen;
-				onKeyUp(windowEvent.key, cam, myWorld);
+				onKeyDown(windowEvent.key, cam, myWorld);
 				break;
 			case SDL_MOUSEMOTION:
 				if (recentering)
@@ -239,10 +240,10 @@ int main(int argc, char *argv[]) {
 }//END MAIN
 
 /*--------------------------------------------------------------*/
-// onKeyUp : determine which key was pressed and how to edit
+// onKeyDown : determine which key was pressed and how to edit
 //				current translation or rotation parameters
 /*--------------------------------------------------------------*/
-void onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
+void onKeyDown(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 {
 	Vec3D pos = cam->getPos();
 	Vec3D dir = cam->getDir();
@@ -307,6 +308,19 @@ void onKeyUp(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	case SDLK_KP_3:
 		//fire emitter type
 		myWorld->setEmitterType(FIRE_EMITTER);
+		break;
+	/////////////////////////////////
+	case SDLK_u:
+		myWorld->setEmitterToPoint();
+		break;
+	case SDLK_i:
+		myWorld->setEmitterToDisc();
+		break;
+	case SDLK_o:
+		myWorld->setEmitterToSphere();
+		break;
+	case SDLK_p:
+		myWorld->setEmitterToRectangle();
 		break;
 	default:
 		printf("ERROR: Invalid key pressed (%s)\n", SDL_GetKeyName(event.keysym.sym));

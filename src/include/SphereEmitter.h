@@ -18,6 +18,7 @@ private:
 public:
 	//CONSTRUCTORS AND DESTRUCTORS
 	SphereEmitter();
+	SphereEmitter(Vec3D o);
 	SphereEmitter(Vec3D o, float r);
 	~SphereEmitter();
 

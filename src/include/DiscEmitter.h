@@ -18,6 +18,7 @@ private:
 public:
 	//CONSTRUCTORS AND DESTRUCTORS
 	DiscEmitter();
+	DiscEmitter(Vec3D o);
 	DiscEmitter(Vec3D o, float r);
 	~DiscEmitter();
 

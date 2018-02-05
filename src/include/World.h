@@ -91,6 +91,10 @@ public:
 	void setCurNumParticles(int num);
 	void setEmitterGenRate(float rate);
 	void setEmitterType(int num);
+	void setEmitterToPoint();
+	void setEmitterToDisc();
+	void setEmitterToSphere();
+	void setEmitterToRectangle();
 
 	//GETTERS
 	int getWidth();

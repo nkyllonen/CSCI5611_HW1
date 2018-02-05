@@ -9,6 +9,10 @@ using namespace std;
 /*----------------------------*/
 // VIRTUAL
 /*----------------------------*/
+PointEmitter::PointEmitter(Vec3D o) : Emitter::Emitter(o)
+{
+}
+
 PointEmitter::~PointEmitter()
 {
 }

@@ -81,6 +81,42 @@ void World::setEmitterType(int num)
 	particleEmitter->setType(num);
 }
 
+void World::setEmitterToPoint()
+{
+	float rate = particleEmitter->getGenRate();
+	bool act = particleEmitter->isActive();
+	particleEmitter = new PointEmitter(particleEmitter->getOrigin());
+	particleEmitter->setGenRate(rate);
+	particleEmitter->setActive(act);
+}
+
+void World::setEmitterToDisc()
+{
+	float rate = particleEmitter->getGenRate();
+	bool act = particleEmitter->isActive();
+	particleEmitter = new DiscEmitter(particleEmitter->getOrigin());
+	particleEmitter->setGenRate(rate);
+	particleEmitter->setActive(act);
+}
+
+void World::setEmitterToSphere()
+{
+	float rate = particleEmitter->getGenRate();
+	bool act = particleEmitter->isActive();
+	particleEmitter = new SphereEmitter(particleEmitter->getOrigin());
+	particleEmitter->setGenRate(rate);
+	particleEmitter->setActive(act);
+}
+
+void World::setEmitterToRectangle()
+{
+	float rate = particleEmitter->getGenRate();
+	bool act = particleEmitter->isActive();
+	particleEmitter = new RectangleEmitter(particleEmitter->getOrigin());
+	particleEmitter->setGenRate(rate);
+	particleEmitter->setActive(act);
+}
+
 /*----------------------------*/
 // GETTERS
 /*----------------------------*/
