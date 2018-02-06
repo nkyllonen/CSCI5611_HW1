@@ -45,8 +45,8 @@ void Emitter::resetColors()
 	switch (particle_type) {
 		case BALL_EMITTER:
 		color1 = Vec3D(1,0,0);
-		color2 = Vec3D(1,0,0);
-		color3 = Vec3D(1,0,0);
+		color2 = Vec3D();
+		color3 = Vec3D();
 		break;
 		case WATER_EMITTER:
 		color1 = Vec3D(1.0,1.0,1.0);
@@ -57,6 +57,11 @@ void Emitter::resetColors()
 		color1 = Vec3D(1.0,1.0,1.0);
 		color2 = Vec3D(1.0,0.9,0.0);
 		color3 = Vec3D(1.0,0.3,0.0);
+		break;
+		case SPELL_EMITTER:
+		color1 = Vec3D(0.0,1.0,0.0);
+		color2 = Vec3D(1.0,.08,.58);
+		color3 = Vec3D();
 		break;
 		case DEFAULT_EMITTER:
 		color1 = Vec3D();
@@ -129,39 +134,50 @@ Vec3D Emitter::generateRandomPos()
 /*----------------------------*/
 // OTHERS
 /*----------------------------*/
-Particle * Emitter::generateParticle(int model_start, int model_verts)
+Particle * Emitter::generateParticle(int model_start, int model_verts, Camera * cam, float mouse_x, float mouse_y)
 {
 	Particle * p = new Particle();
 
 	Material mat = Material();
-	Vec3D vel, acc, size;
+	Vec3D pos, vel, acc, size;
 	float lifespan;
 
 	switch (particle_type) {
 		case BALL_EMITTER:
+			pos = generateRandomPos();
 			vel = Vec3D(-1 + .1 * (rand()%10), 0, -1 + .1 * (rand()%10));
-			origin = Vec3D(0,5,0);
+			//origin = Vec3D(0,5,0);
 			lifespan = 10;
 			acc = Vec3D(0,-9.8,0);
 			size = Vec3D(1.0,1.0,1.0);
 			break;
 		case WATER_EMITTER:
+			pos = generateRandomPos();
 			vel = Vec3D(1 + .1 * (rand()%5), 5, .1 * (rand()%5));
-			origin = Vec3D(0,5,0);
+			//origin = Vec3D(0,5,0);
 			lifespan = 5 + (.1 * (rand()%5));
 			acc = Vec3D(0,-9.8,0);
 			size = Vec3D(.1,.1,.1);
 			break;
 		case FIRE_EMITTER:
+			pos = generateRandomPos();
 			vel = Vec3D(0.0, 1.0, 0.0);
-			origin = Vec3D(0,0.1,0);
+			//origin = Vec3D(0,0.1,0);
 			lifespan = 5 + (.1 * (rand()%5));
 			acc = Vec3D((rand()%20 - 10)/50.0, 1.0e-4,(rand()%20 - 10)/50.0);
 			size = Vec3D(.1,.1,.1);
 			break;
+		case SPELL_EMITTER:
+			pos = cam->getPos() + cam->getDir() + .0014 * mouse_x * cam->getRight() - .0014 * mouse_y * cam->getUp();
+			vel = cam->getDir();
+			lifespan = 5 + (.1 * (rand()%5));
+			acc = 0.1 * cam->getDir();
+			size = Vec3D(.1,.1,.1);
+			break;
 		case DEFAULT_EMITTER:
+			pos = generateRandomPos();
 			vel = Vec3D(1 + .1 * (rand()%5), 5, .1 * (rand()%5));
-			origin = Vec3D(0,5,0);
+			//origin = Vec3D(0,5,0);
 			lifespan = 5 + (.1 * (rand()%5));
 			acc = Vec3D(0,-9.8,0);
 			size = Vec3D(.1,.1,.1);
@@ -176,7 +192,7 @@ Particle * Emitter::generateParticle(int model_start, int model_verts)
 	mat.setDiffuse(util::vec3DtoGLM(color1));
 	mat.setSpecular(glm::vec3(0.75, 0.75, 0.75));
 
-	p->setPos(generateRandomPos());
+	p->setPos(pos);
 	p->setVel(vel);
 	p->setAcc(acc);
 	p->setLifespan(lifespan);
@@ -202,6 +218,8 @@ Vec3D Emitter::generateNewColor(float t)
 		return util::colorInterp2(color1, color2, t);
 		case FIRE_EMITTER:
 		return util::colorInterp3(color1, color2, color3, t);
+		case SPELL_EMITTER:
+		return util::colorInterp2(color1, color2, t);
 		case DEFAULT_EMITTER:
 		return color1;
 		default:

@@ -76,6 +76,11 @@ void World::setEmitterGenRate(float rate)
 	particleEmitter->setGenRate(rate);
 }
 
+void World::setEmitterOrigin(Vec3D o)
+{
+	particleEmitter->setOrigin(o);
+}
+
 void World::setEmitterType(int num)
 {
 	particleEmitter->setType(num);
@@ -151,6 +156,11 @@ int World::getCurNumParticles()
 float World::getEmitterGenRate()
 {
 	return particleEmitter->getGenRate();
+}
+
+Vec3D World::getEmitterOrigin()
+{
+	return particleEmitter->getOrigin();
 }
 
 /*----------------------------*/
@@ -416,7 +426,7 @@ void World::updateParticles(float dt, float cur_time)
 }
 
 //
-void World::spawnParticles(int num_to_emit, float cur_time)
+void World::spawnParticles(int num_to_emit, float cur_time, Camera * cam, float mouse_x, float mouse_y)
 {
 	if (particleEmitter->isActive())
 	{
@@ -429,19 +439,22 @@ void World::spawnParticles(int num_to_emit, float cur_time)
 				switch (particleEmitter->getType())
 				{
 					case BALL_EMITTER:
-					pp = particleEmitter->generateParticle(SPHERE_START, SPHERE_VERTS);
-					break;
+						pp = particleEmitter->generateParticle(SPHERE_START, SPHERE_VERTS, cam, mouse_x, mouse_y);
+						break;
 					case WATER_EMITTER:
-					pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS);
-					break;
+						pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS, cam, mouse_x, mouse_y);
+						break;
 					case FIRE_EMITTER:
-					pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS);
-					break;
+						pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS, cam, mouse_x, mouse_y);
+						break;
+					case SPELL_EMITTER:
+						pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS, cam, mouse_x, mouse_y);
+						break;
 					case DEFAULT_EMITTER:
-					pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS);
-					break;
+						pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS, cam, mouse_x, mouse_y);
+						break;
 					default:
-					pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS);
+						pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS, cam, mouse_x, mouse_y);
 				}
 				pp->setBirth(cur_time);
 				objArray[cur_num_particles] = pp;

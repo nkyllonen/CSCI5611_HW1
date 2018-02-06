@@ -91,6 +91,7 @@ public:
 	void setFloor(float f);
 	void setCurNumParticles(int num);
 	void setEmitterGenRate(float rate);
+	void setEmitterOrigin(Vec3D o);
 	void setEmitterType(int num);
 	void setEmitterToPoint();
 	void setEmitterToDisc();
@@ -103,6 +104,7 @@ public:
 	int getMaxNumParticles();
 	int getCurNumParticles();
 	float getEmitterGenRate();
+	Vec3D getEmitterOrigin();
 
 	//OTHERS
 	bool loadModelData();
@@ -112,7 +114,7 @@ public:
 	void drawFloor();
 	void initEmitter();
 	void updateParticles(float dt, float cur_time);
-	void spawnParticles(int num_to_emit, float cur_time);
+	void spawnParticles(int num_to_emit, float cur_time, Camera * cam, float mouse_x, float mouse_y);
 	void turnEmitterOnOff();
 
 };

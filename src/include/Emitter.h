@@ -11,6 +11,7 @@ enum EMITTER_type
   BALL_EMITTER,
   WATER_EMITTER,
   FIRE_EMITTER,
+  SPELL_EMITTER,
   DEFAULT_EMITTER
 };
 
@@ -53,7 +54,7 @@ public:
   virtual Vec3D generateRandomPos();
 
   //OTHERS
-  Particle * generateParticle(int model_start, int model_verts);
+  Particle * generateParticle(int model_start, int model_verts, Camera * cam, float mouse_x, float mouse_y);
   void changeActive();
   Vec3D generateNewColor(float t);
 
