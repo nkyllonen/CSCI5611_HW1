@@ -65,3 +65,12 @@ float Particle::getDamping()
 /*----------------------------*/
 // OTHERS
 /*----------------------------*/
+
+
+/*----------------------------*/
+// VIRTUALS
+/*----------------------------*/
+int Particle::getType()
+{
+	return PARTICLE_WOBJ;
+}

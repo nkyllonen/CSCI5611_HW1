@@ -213,17 +213,17 @@ Vec3D Emitter::generateNewColor(float t)
 {
 	switch (particle_type) {
 		case BALL_EMITTER:
-		return color1;
+			return color1;
 		case WATER_EMITTER:
-		return util::colorInterp2(color1, color2, t);
+			return util::colorInterp2(color1, color2, t);
 		case FIRE_EMITTER:
-		return util::colorInterp3(color1, color2, color3, t);
+			return util::colorInterp3(color1, color2, color3, t, 0.1);
 		case SPELL_EMITTER:
-		return util::colorInterp2(color1, color2, t);
+			return util::colorInterp2(color1, color2, t);
 		case DEFAULT_EMITTER:
-		return color1;
+			return color1;
 		default:
-		cout << "ERROR: reached default case in Emitter::generateNewColor()" << endl;
-		return color1;
+			cout << "ERROR: reached default case in Emitter::generateNewColor()" << endl;
+			return color1;
 	}
 }
