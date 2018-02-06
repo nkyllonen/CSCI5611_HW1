@@ -44,35 +44,40 @@ void Emitter::resetColors()
 {
 	switch (particle_type) {
 		case BALL_EMITTER:
-		color1 = Vec3D(1,0,0);
-		color2 = Vec3D();
-		color3 = Vec3D();
-		break;
+			color1 = Vec3D(1,0,0);
+			color2 = Vec3D();
+			color3 = Vec3D();
+			break;
 		case WATER_EMITTER:
-		color1 = Vec3D(1.0,1.0,1.0);
-		color2 = Vec3D(0.0,0.1,0.8);
-		color3 = Vec3D();
-		break;
+			color1 = Vec3D(0.1,0.3,1.0);
+			color2 = Vec3D();
+			color3 = Vec3D();
+			break;
 		case FIRE_EMITTER:
-		color1 = Vec3D(1.0,1.0,1.0);
-		color2 = Vec3D(1.0,0.9,0.0);
-		color3 = Vec3D(1.0,0.3,0.0);
-		break;
+			color1 = Vec3D(1.0,1.0,1.0);
+			color2 = Vec3D(1.0,0.9,0.0);
+			color3 = Vec3D(1.0,0.3,0.0);
+			break;
 		case SPELL_EMITTER:
-		color1 = Vec3D(0.0,1.0,0.0);
-		color2 = Vec3D(1.0,.08,.58);
-		color3 = Vec3D();
-		break;
+			color1 = Vec3D(0.0,1.0,0.0);
+			color2 = Vec3D(1.0,.08,.58);
+			color3 = Vec3D();
+			break;
+		case SNOW_EMITTER:
+			color1 = Vec3D(1,1,1);
+			color2 = Vec3D();
+			color3 = Vec3D();
+			break;
 		case DEFAULT_EMITTER:
-		color1 = Vec3D();
-		color2 = Vec3D();
-		color3 = Vec3D();
-		break;
+			color1 = Vec3D();
+			color2 = Vec3D();
+			color3 = Vec3D();
+			break;
 		default:
-		cout << "ERROR: reached default case in Emitter::resetColors()" << endl;
-		color1 = Vec3D();
-		color2 = Vec3D();
-		color3 = Vec3D();
+			cout << "ERROR: reached default case in Emitter::resetColors()" << endl;
+			color1 = Vec3D();
+			color2 = Vec3D();
+			color3 = Vec3D();
 	}
 }
 
@@ -140,7 +145,7 @@ Particle * Emitter::generateParticle(int model_start, int model_verts, Camera * 
 
 	Material mat = Material();
 	Vec3D pos, vel, acc, size;
-	float lifespan;
+	float lifespan, damping;
 
 	switch (particle_type) {
 		case BALL_EMITTER:
@@ -149,6 +154,7 @@ Particle * Emitter::generateParticle(int model_start, int model_verts, Camera * 
 			lifespan = 10;
 			acc = Vec3D(0,-9.8,0);
 			size = Vec3D(1.0,1.0,1.0);
+			damping = -0.7;
 			break;
 		case WATER_EMITTER:
 			pos = generateRandomPos();
@@ -156,6 +162,7 @@ Particle * Emitter::generateParticle(int model_start, int model_verts, Camera * 
 			lifespan = 5 + (.1 * (rand()%5));
 			acc = Vec3D(0,-9.8,0);
 			size = Vec3D(.1,.1,.1);
+			damping = -0.7;
 			break;
 		case FIRE_EMITTER:
 			pos = generateRandomPos();
@@ -163,6 +170,7 @@ Particle * Emitter::generateParticle(int model_start, int model_verts, Camera * 
 			lifespan = 5 + (.1 * (rand()%5));
 			acc = Vec3D((rand()%20 - 10)/50.0, 1.0e-4,(rand()%20 - 10)/50.0);
 			size = Vec3D(.1,.1,.1);
+			damping = -0.7;
 			break;
 		case SPELL_EMITTER:
 			pos = cam->getPos() + cam->getDir() + .0014 * mouse_x * cam->getRight() - .0014 * mouse_y * cam->getUp();
@@ -171,6 +179,16 @@ Particle * Emitter::generateParticle(int model_start, int model_verts, Camera * 
 			lifespan = 5 + (.1 * (rand()%5));
 			acc = 0.1 * cam->getDir();
 			size = Vec3D(.05,.05,.05);
+			damping = -0.7;
+			break;
+		case SNOW_EMITTER:
+			pos = generateRandomPos();
+			vel = Vec3D(-1 + .1 * (rand()%20), -2, -1 + .1 * (rand()%20));
+			vel.normalize();
+			lifespan = 10 + (.1 * (rand()%5));
+			acc = Vec3D(0,0,0);
+			size = Vec3D(.1,.1,.1);
+			damping = 0.0;
 			break;
 		case DEFAULT_EMITTER:
 			pos = generateRandomPos();
@@ -178,6 +196,7 @@ Particle * Emitter::generateParticle(int model_start, int model_verts, Camera * 
 			lifespan = 5 + (.1 * (rand()%5));
 			acc = Vec3D(0,-9.8,0);
 			size = Vec3D(.1,.1,.1);
+			damping = -0.7;
 			break;
 		default:
 			break;
@@ -196,7 +215,7 @@ Particle * Emitter::generateParticle(int model_start, int model_verts, Camera * 
 	p->setMaterial(mat);
 	p->setSize(size);
 	p->setVertexInfo(model_start, model_verts);
-	p->setDamping(-0.7);
+	p->setDamping(damping);
 
 	return p;
 }
@@ -212,11 +231,13 @@ Vec3D Emitter::generateNewColor(float t)
 		case BALL_EMITTER:
 			return color1;
 		case WATER_EMITTER:
-			return util::colorInterp2(color1, color2, t);
+			return color1;
 		case FIRE_EMITTER:
 			return util::colorInterp3(color1, color2, color3, t, 0.1);
 		case SPELL_EMITTER:
 			return util::colorInterp2(color1, color2, t);
+		case SNOW_EMITTER:
+			return color1;
 		case DEFAULT_EMITTER:
 			return color1;
 		default:
