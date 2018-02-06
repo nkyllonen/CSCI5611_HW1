@@ -55,17 +55,12 @@ World::~World()
 	}
 	delete[] objArray;
 	particleEmitter->~Emitter();
-	//delete floor;
+	delete floor;
 }
 
 /*----------------------------*/
 // SETTERS
 /*----------------------------*/
-void World::setFloor(float f)
-{
-	floor->setPos(Vec3D(0,f,0));
-}
-
 void World::setCurNumParticles(int num)
 {
 	cur_num_particles = num;
@@ -183,8 +178,15 @@ bool World::loadModelData()
 	cout << "\nNumber of vertices in cube model : " << CUBE_VERTS << endl;
 	total_verts += CUBE_VERTS;
 
+	//QUAD
+	QUAD_START = CUBE_VERTS;
+	QUAD_VERTS = 0;
+	float * quadData = createQuadData(QUAD_VERTS);
+	cout << "\nNumber of vertices in quad model : " << QUAD_VERTS << endl << endl;
+	total_verts += QUAD_VERTS;
+
 	//SPHERE
-	SPHERE_START = CUBE_VERTS;
+	SPHERE_START = QUAD_VERTS;
 	SPHERE_VERTS = 0;
 	#ifdef __APPLE__
 	float* sphereData = util::loadModel("../models/sphere.txt", SPHERE_VERTS);
@@ -194,13 +196,6 @@ bool World::loadModelData()
 	cout << "\nNumber of vertices in sphere model : " << SPHERE_VERTS << endl;
 	total_verts += SPHERE_VERTS;
 
-	//QUAD
-	/*QUAD_START = SPHERE_VERTS;
-	QUAD_VERTS = 0;
-	float * quadData = createQuadData(QUAD_VERTS);
-	cout << "\nNumber of vertices in quad model : " << QUAD_VERTS << endl << endl;
-	total_verts += QUAD_VERTS;
-	*/
 	/////////////////////////////////
 	//BUILD MODELDATA ARRAY
 	/////////////////////////////////
@@ -216,11 +211,11 @@ bool World::loadModelData()
 
 	//copy data into modelData array
 	copy(cubeData, cubeData + CUBE_VERTS * 8, modelData);
-	copy(sphereData, sphereData + SPHERE_VERTS * 8, modelData + (CUBE_VERTS * 8));
-	//copy(quadData, quadData + QUAD_VERTS * 8, modelData + (SPHERE_VERTS * 8));
+	copy(quadData, quadData + QUAD_VERTS * 8, modelData + (CUBE_VERTS * 8));
+	copy(sphereData, sphereData + SPHERE_VERTS * 8, modelData + (QUAD_VERTS * 8));
 	delete[] cubeData;
 	delete[] sphereData;
-	//delete[] quadData;
+	delete[] quadData;
 	return true;
 }
 
@@ -272,19 +267,22 @@ bool World::setupGraphics()
 	}
 
 	//Tell OpenGL how to set fragment shader input
+	//first 3 floats are position coords
 	GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
 	//Attribute, vals/attrib., type, normalized?, stride, offset
 	//Binds to VBO current GL_ARRAY_BUFFER
 	glEnableVertexAttribArray(posAttrib);
 
-	GLint normAttrib = glGetAttribLocation(shaderProgram, "inNormal");
-	glVertexAttribPointer(normAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
-	glEnableVertexAttribArray(normAttrib);
-
+	//next 2 floats are texture coords (u,v)
 	GLint texAttrib = glGetAttribLocation(shaderProgram, "inTexcoord");
 	glEnableVertexAttribArray(texAttrib);
 	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+
+	//last 3 floats are normal coords
+	GLint normAttrib = glGetAttribLocation(shaderProgram, "inNormal");
+	glVertexAttribPointer(normAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+	glEnableVertexAttribArray(normAttrib);
 
 	glBindVertexArray(0); //Unbind the VAO in case we want to create a new one
 
@@ -293,6 +291,7 @@ bool World::setupGraphics()
 }
 
 //loops through WObj array and draws each
+//also draws floor
 void World::draw(Camera * cam)
 {
 	glClearColor(.2f, 0.4f, 0.8f, 1.0f);
@@ -330,16 +329,16 @@ void World::draw(Camera * cam)
 
 	glBindVertexArray(vao);
 
-	//draw floor
-	//glUniform1i(uniTexID, 1);
-	//floor->draw(shaderProgram);
-
 	glUniform1i(uniTexID, -1); //Set texture ID to use (0 = wood texture, -1 = no texture)
 
 	for (int i = 0; i < cur_num_particles; i++)
 	{
 		objArray[i]->draw(shaderProgram);
 	}
+
+	//draw floor
+	glUniform1i(uniTexID, -1);
+	floor->draw(shaderProgram);
 }
 
 //
@@ -377,8 +376,7 @@ void World::updateParticles(float dt, float cur_time)
 			float age = (cur_time - pp->getBirth()) / 1000.0 / pp->getLifespan();
 			newColor = particleEmitter->generateNewColor(age);
 
-			//if (temp_pos.getY() > floor->getPos().getY())
-			if (temp_pos.getY() > 0)
+			if (temp_pos.getY() > floor->getPos().getY())
 			{
 				temp_vel = vel + (dt * acc);
 			}
@@ -434,6 +432,7 @@ void World::spawnParticles(int num_to_emit, float cur_time, Camera * cam, float 
 						break;
 					default:
 						pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS, cam, mouse_x, mouse_y);
+						break;
 				}
 				pp->setBirth(cur_time);
 				objArray[cur_num_particles] = pp;
@@ -465,21 +464,28 @@ float* World::createQuadData(int& verts)
 {
 	verts = 48 / 8;
 	//1x1 quad in the xy plane centered on origin
+	//3 pos + (u,v) + 3 norm coords
 	return new float[48] {
-							-0.5f, 0.0f,-0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, //1
-							-0.5f, 0.0f,0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,  //2
-							0.5f, 0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  //3
-							0.5f, 0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  //3
-							0.5f, 0.0f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, //4
-							-0.5f, 0.0f,-0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f  //1
-						};
+			-0.5f, 0.0f,-0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, //1
+			-0.5f, 0.0f,0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,  //2
+			0.5f, 0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,  //3
+			0.5f, 0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,  //3
+			0.5f, 0.0f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, //4
+			-0.5f, 0.0f,-0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f  //1
+		};
 }
 
 //
 void World::setUpFloor()
 {
-	/*floor = new Quad(Vec3D(0,0,0), Vec3D(0,1.0,0));
-	floor->setVertexInfo(QUAD_START, QUAD_VERTS);
-	floor->setSize(Vec3D(100,0,100));
-	floor->setColor(Vec3D(0.1,0.1,0.1));*/
+	floor = new WorldObject(Vec3D(0,-5,0));
+	floor->setVertexInfo(CUBE_START, CUBE_VERTS);
+	floor->setSize(Vec3D(100,0.1,100));
+
+	Material mat;
+	mat.setAmbient(glm::vec3(0.7, 0.7, 0.7));
+	mat.setDiffuse(glm::vec3(0.7, 0.7, 0.7));
+	mat.setSpecular(glm::vec3(0, 0, 0));
+
+	floor->setMaterial(mat);
 }

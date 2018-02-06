@@ -75,7 +75,7 @@ private:
 	GLuint tex2;
 
 	//what lives in this world
-	Quad * floor;
+	WorldObject * floor;
 	WorldObject ** objArray = NULL;
 	Emitter * particleEmitter;
 
@@ -91,9 +91,6 @@ public:
 	~World();
 
 	//SETTERS
-	void setCubeIndices(int start, int tris);
-	void setSphereIndices(int start, int tris);
-	void setFloor(float f);
 	void setCurNumParticles(int num);
 	void setEmitterGenRate(float rate);
 	void setEmitterOrigin(Vec3D o);
