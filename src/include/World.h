@@ -115,6 +115,7 @@ public:
 	void updateParticles(float dt, float cur_time);
 	void spawnParticles(int num_to_emit, float cur_time, Camera * cam, float mouse_x, float mouse_y);
 	void turnEmitterOnOff();
+	void changeEmitterSize(float multiplier);
 	void deleteParticles();
 
 };

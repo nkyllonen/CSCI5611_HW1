@@ -55,3 +55,8 @@ Vec3D SphereEmitter::generateRandomPos()
 	float theta = acos(2 * v - 1);
 	return Vec3D(getOrigin().getX() + radius * sin(theta) * cos(phi), getOrigin().getY() + radius * sin(theta) * sin(phi), getOrigin().getZ() + radius * cos(theta)); //assumes disc in the y plane
 }
+
+void SphereEmitter::changeSize(float multiplier)
+{
+	radius = radius * multiplier;
+}

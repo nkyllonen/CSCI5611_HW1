@@ -12,6 +12,7 @@ enum EMITTER_type
   WATER_EMITTER,
   FIRE_EMITTER,
   SPELL_EMITTER,
+  SNOW_EMITTER,
   DEFAULT_EMITTER
 };
 
@@ -52,6 +53,7 @@ public:
   //VIRTUAL
   //child classes will have different pos generation algorithms
   virtual Vec3D generateRandomPos();
+  virtual void changeSize(float multiplier);
 
   //OTHERS
   Particle * generateParticle(int model_start, int model_verts, Camera * cam, float mouse_x, float mouse_y);

@@ -294,7 +294,7 @@ bool World::setupGraphics()
 //also draws floor
 void World::draw(Camera * cam)
 {
-	glClearColor(.2f, 0.4f, 0.8f, 1.0f);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(shaderProgram); //Set the active shader (only one can be used at a time)
@@ -349,6 +349,8 @@ void World::updateParticles(float dt, float cur_time)
 	float damping = 0.0, error = 0.02;
 	Vec3D newColor;
 
+	int ran = rand()%500;
+
 	for (int i = 0; i < cur_num_particles; i++)
 	{
 		WorldObject * p = objArray[i]; //ith particle
@@ -376,21 +378,35 @@ void World::updateParticles(float dt, float cur_time)
 			float age = (cur_time - pp->getBirth()) / 1000.0 / pp->getLifespan();
 			newColor = particleEmitter->generateNewColor(age);
 
-			if (temp_pos.getY() > floor->getPos().getY())
+			if (particleEmitter->getType() == SNOW_EMITTER)
 			{
-				temp_vel = vel + (dt * acc);
+				if (ran == i%500)
+				{
+					temp_vel = Vec3D(vel.getX() * -1, vel.getY(), vel.getZ() * -1);
+				}
+				else
+				{
+					temp_vel = vel + (dt * acc);
+				}
 			}
 			else
 			{
-				if (abs(temp_pos.getY() - pos.getY()) > error)
+				if (temp_pos.getY() > floor->getPos().getY())
 				{
-					temp_vel = Vec3D(vel.getX() * -1 * damping, vel.getY() * damping, vel.getZ() * -1 * damping);
+					temp_vel = vel + (dt * acc);
 				}
-				else //kill tiny bounces
+				else
 				{
-					temp_vel = Vec3D(vel.getX() * -0.5 * damping, vel.getY() * 0.5 * damping, vel.getZ() * -0.5 * damping);
+					if (abs(temp_pos.getY() - pos.getY()) > error)
+					{
+						temp_vel = Vec3D(vel.getX() * -1 * damping, vel.getY() * damping, vel.getZ() * -1 * damping);
+					}
+					else //kill tiny bounces
+					{
+						temp_vel = Vec3D(vel.getX() * -0.5 * damping, vel.getY() * 0.5 * damping, vel.getZ() * -0.5 * damping);
+					}
+					temp_pos = pos + (dt*temp_vel);
 				}
-				temp_pos = pos + (dt*temp_vel);
 			}
 
 			pp->setPos(temp_pos);
@@ -427,6 +443,9 @@ void World::spawnParticles(int num_to_emit, float cur_time, Camera * cam, float 
 					case SPELL_EMITTER:
 						pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS, cam, mouse_x, mouse_y);
 						break;
+					case SNOW_EMITTER:
+						pp = particleEmitter->generateParticle(SPHERE_START, SPHERE_VERTS, cam, mouse_x, mouse_y);
+						break;
 					case DEFAULT_EMITTER:
 						pp = particleEmitter->generateParticle(CUBE_START, CUBE_VERTS, cam, mouse_x, mouse_y);
 						break;
@@ -445,6 +464,11 @@ void World::spawnParticles(int num_to_emit, float cur_time, Camera * cam, float 
 void World::turnEmitterOnOff()
 {
 	particleEmitter->changeActive();
+}
+
+void World::changeEmitterSize(float multiplier)
+{
+	particleEmitter->changeSize(multiplier);
 }
 
 void World::deleteParticles()

@@ -54,3 +54,8 @@ Vec3D DiscEmitter::generateRandomPos()
 	float theta = rand() / (RAND_MAX / (2 * M_PI));
 	return Vec3D(getOrigin().getX() + r * cos(theta), getOrigin().getY(), getOrigin().getZ() + r * sin(theta)); //assumes disc in the y plane
 }
+
+void DiscEmitter::changeSize(float multiplier)
+{
+	radius = radius * multiplier;
+}

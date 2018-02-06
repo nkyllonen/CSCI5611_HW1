@@ -294,6 +294,13 @@ void onKeyDown(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	case SDLK_DOWN:
 		myWorld->setEmitterGenRate(myWorld->getEmitterGenRate() * 2);
 		break;
+
+	case SDLK_EQUALS:
+		myWorld->changeEmitterSize(2);
+		break;
+	case SDLK_MINUS:
+		myWorld->changeEmitterSize(0.5);
+		break;
 	/////////////////////////////////
 	//CHANGE PARTICLE TYPE WITH #S
 	/////////////////////////////////
@@ -335,6 +342,15 @@ void onKeyDown(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 		myWorld->deleteParticles();
 		myWorld->setEmitterType(SPELL_EMITTER);
 		myWorld->setEmitterGenRate(.01);
+		break;
+	case SDLK_6:
+	case SDLK_KP_6:
+		//snow emitter type
+		myWorld->deleteParticles();
+		myWorld->setEmitterType(SNOW_EMITTER);
+		myWorld->setEmitterToRectangle();
+		myWorld->setEmitterOrigin(Vec3D(0,10,0));
+		myWorld->setEmitterGenRate(.2);
 		break;
 	/////////////////////////////////
 	//CHANGE EMITTER SHAPE WITH UIOP
