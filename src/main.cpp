@@ -346,6 +346,8 @@ void onKeyDown(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 		myWorld->setEmitterGenRate(.2);
 		break;
 	/////////////////////////////////
+	//CHANGE EMITTER SHAPE WITH UIOP
+	/////////////////////////////////
 	case SDLK_u:
 		myWorld->setEmitterToPoint();
 		break;

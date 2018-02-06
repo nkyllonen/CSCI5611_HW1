@@ -55,7 +55,7 @@ World::~World()
 	}
 	delete[] objArray;
 	particleEmitter->~Emitter();
-	delete floor;
+	//delete floor;
 }
 
 /*----------------------------*/
@@ -195,12 +195,12 @@ bool World::loadModelData()
 	total_verts += SPHERE_VERTS;
 
 	//QUAD
-	QUAD_START = SPHERE_VERTS;
+	/*QUAD_START = SPHERE_VERTS;
 	QUAD_VERTS = 0;
 	float * quadData = createQuadData(QUAD_VERTS);
 	cout << "\nNumber of vertices in quad model : " << QUAD_VERTS << endl << endl;
 	total_verts += QUAD_VERTS;
-
+	*/
 	/////////////////////////////////
 	//BUILD MODELDATA ARRAY
 	/////////////////////////////////
@@ -217,10 +217,10 @@ bool World::loadModelData()
 	//copy data into modelData array
 	copy(cubeData, cubeData + CUBE_VERTS * 8, modelData);
 	copy(sphereData, sphereData + SPHERE_VERTS * 8, modelData + (CUBE_VERTS * 8));
-	copy(quadData, quadData + QUAD_VERTS * 8, modelData + (SPHERE_VERTS * 8));
+	//copy(quadData, quadData + QUAD_VERTS * 8, modelData + (SPHERE_VERTS * 8));
 	delete[] cubeData;
 	delete[] sphereData;
-	delete[] quadData;
+	//delete[] quadData;
 	return true;
 }
 
@@ -293,7 +293,6 @@ bool World::setupGraphics()
 }
 
 //loops through WObj array and draws each
-//also draws floor
 void World::draw(Camera * cam)
 {
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -332,8 +331,8 @@ void World::draw(Camera * cam)
 	glBindVertexArray(vao);
 
 	//draw floor
-	glUniform1i(uniTexID, 1);
-	floor->draw(shaderProgram);
+	//glUniform1i(uniTexID, 1);
+	//floor->draw(shaderProgram);
 
 	glUniform1i(uniTexID, -1); //Set texture ID to use (0 = wood texture, -1 = no texture)
 
@@ -393,7 +392,8 @@ void World::updateParticles(float dt, float cur_time)
 			}
 			else
 			{
-				if (temp_pos.getY() > floor->getPos().getY())
+				//if (temp_pos.getY() > floor->getPos().getY())
+				if (temp_pos.getY() > 0)
 				{
 					temp_vel = vel + (dt * acc);
 				}
@@ -482,21 +482,23 @@ void World::deleteParticles()
 //
 float* World::createQuadData(int& verts)
 {
-	verts = 32 / 8;
+	verts = 48 / 8;
 	//1x1 quad in the xy plane centered on origin
-	return new float[32] {
-							-0.5f, 0.0f,-0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-							-0.5f, 0.0f,0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-							0.5f, 0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-							0.5f, 0.0f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f
+	return new float[48] {
+							-0.5f, 0.0f,-0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, //1
+							-0.5f, 0.0f,0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,  //2
+							0.5f, 0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  //3
+							0.5f, 0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  //3
+							0.5f, 0.0f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, //4
+							-0.5f, 0.0f,-0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f  //1
 						};
 }
 
 //
 void World::setUpFloor()
 {
-	floor = new Quad(Vec3D(0,0,0), Vec3D(0,1.0,0));
+	/*floor = new Quad(Vec3D(0,0,0), Vec3D(0,1.0,0));
 	floor->setVertexInfo(QUAD_START, QUAD_VERTS);
-	floor->setSize(Vec3D(10,0,10));
-	floor->setColor(Vec3D(0.1,0.1,0.1));
+	floor->setSize(Vec3D(100,0,100));
+	floor->setColor(Vec3D(0.1,0.1,0.1));*/
 }
