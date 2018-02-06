@@ -166,10 +166,11 @@ Particle * Emitter::generateParticle(int model_start, int model_verts, Camera * 
 			break;
 		case SPELL_EMITTER:
 			pos = cam->getPos() + cam->getDir() + .0014 * mouse_x * cam->getRight() - .0014 * mouse_y * cam->getUp();
-			vel = 2 * cam->getDir();
+			vel = 2 * cam->getDir() + (-.25 + .025 * (rand()%20)) * cam->getRight() + (-.25 + .025 * (rand()%20)) * cam->getUp();
+			vel = vel + .003 * mouse_x * cam->getRight() - .003 * mouse_y * cam->getUp();
 			lifespan = 5 + (.1 * (rand()%5));
 			acc = 0.1 * cam->getDir();
-			size = Vec3D(.1,.1,.1);
+			size = Vec3D(.05,.05,.05);
 			break;
 		case DEFAULT_EMITTER:
 			pos = generateRandomPos();
