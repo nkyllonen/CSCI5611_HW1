@@ -467,6 +467,11 @@ void World::turnEmitterOnOff()
 	particleEmitter->changeActive();
 }
 
+void World::changeEmitterSize(float multiplier)
+{
+	particleEmitter->changeSize(multiplier);
+}
+
 void World::deleteParticles()
 {
 	for (int i = 0; i < cur_num_particles; i++)

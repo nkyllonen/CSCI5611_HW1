@@ -69,7 +69,7 @@ void Emitter::resetColors()
 			color3 = Vec3D();
 			break;
 		case DEFAULT_EMITTER:
-			color1 = Vec3D();
+			color1 = Vec3D(1,0,0);
 			color2 = Vec3D();
 			color3 = Vec3D();
 			break;
@@ -135,6 +135,11 @@ Vec3D Emitter::generateRandomPos()
 {
 	return origin;
 }
+
+void Emitter::changeSize(float multiplier)
+{
+}
+
 
 /*----------------------------*/
 // OTHERS

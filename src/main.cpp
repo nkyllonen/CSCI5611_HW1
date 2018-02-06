@@ -294,6 +294,13 @@ void onKeyDown(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	case SDLK_DOWN:
 		myWorld->setEmitterGenRate(myWorld->getEmitterGenRate() * 2);
 		break;
+
+	case SDLK_EQUALS:
+		myWorld->changeEmitterSize(2);
+		break;
+	case SDLK_MINUS:
+		myWorld->changeEmitterSize(0.5);
+		break;
 	/////////////////////////////////
 	//CHANGE PARTICLE TYPE WITH #S
 	/////////////////////////////////

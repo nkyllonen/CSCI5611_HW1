@@ -24,3 +24,7 @@ Vec3D PointEmitter::generateRandomPos()
 {
 	return origin;
 }
+
+void PointEmitter::changeSize(float multiplier)
+{
+}

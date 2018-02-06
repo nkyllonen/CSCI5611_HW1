@@ -30,6 +30,6 @@ public:
 
 	//VIRTUAL
 	Vec3D generateRandomPos();
-
+	void changeSize(float multiplier);
 };
 #endif
