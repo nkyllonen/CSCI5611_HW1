@@ -51,7 +51,7 @@ public:
 	virtual int getType();
 
 	//OTHER
-	void draw(GLuint shaderProgram); //shared draw function among WObjs; WO_Portal has its own implementation
+	void draw(GLuint shaderProgram); //shared draw function among WObjs
 
 };
 

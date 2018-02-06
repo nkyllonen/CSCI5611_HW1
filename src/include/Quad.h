@@ -22,6 +22,8 @@ public:
   //VIRTUALS
   int getType();
 
+  //OTHERS
+
 };
 
 #endif

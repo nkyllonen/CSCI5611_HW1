@@ -238,7 +238,7 @@ Vec3D util::colorInterp2(Vec3D color1, Vec3D color2, float t)
 /*--------------------------------------------------------------*/
 Vec3D util::colorInterp3(Vec3D color1, Vec3D color2, Vec3D color3, float t, float t_split)
 {
-	printf("t : %f\n", t);
+	//printf("t : %f\n", t);
 	if (t < t_split)
 	{
 		return colorInterp2(color1, color2, t/t_split);
