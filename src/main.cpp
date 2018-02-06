@@ -190,7 +190,6 @@ int main(int argc, char *argv[]) {
 				{
 					mouse_x = windowEvent.motion.x;
 					mouse_y = windowEvent.motion.y;
-					printf("Mouse is at %f, %f\n", mouse_x, mouse_y);
 					mouseMove(windowEvent.motion, cam, horizontal_angle, vertical_angle);
 					// recentering = true;
 				}
@@ -301,6 +300,7 @@ void onKeyDown(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	case SDLK_1:
 	case SDLK_KP_1:
 		//default emitter type
+		myWorld->deleteParticles();
 		myWorld->setEmitterType(DEFAULT_EMITTER);
 		myWorld->setEmitterOrigin(Vec3D(0,5,0));
 		myWorld->setEmitterGenRate(.1);
@@ -308,6 +308,7 @@ void onKeyDown(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	case SDLK_2:
 	case SDLK_KP_2:
 		//ball emitter type
+		myWorld->deleteParticles();
 		myWorld->setEmitterType(BALL_EMITTER);
 		myWorld->setEmitterOrigin(Vec3D(0,5,0));
 		myWorld->setEmitterGenRate(5);
@@ -315,6 +316,7 @@ void onKeyDown(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	case SDLK_3:
 	case SDLK_KP_3:
 		//water emitter type
+		myWorld->deleteParticles();
 		myWorld->setEmitterType(WATER_EMITTER);
 		myWorld->setEmitterOrigin(Vec3D(0,5,0));
 		myWorld->setEmitterGenRate(.1);
@@ -322,6 +324,7 @@ void onKeyDown(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	case SDLK_4:
 	case SDLK_KP_4:
 		//fire emitter type
+		myWorld->deleteParticles();
 		myWorld->setEmitterType(FIRE_EMITTER);
 		myWorld->setEmitterOrigin(Vec3D(0,0.1,0));
 		myWorld->setEmitterGenRate(.1);
@@ -329,8 +332,9 @@ void onKeyDown(SDL_KeyboardEvent & event, Camera* cam, World* myWorld)
 	case SDLK_5:
 	case SDLK_KP_5:
 		//spell emitter type
+		myWorld->deleteParticles();
 		myWorld->setEmitterType(SPELL_EMITTER);
-		myWorld->setEmitterGenRate(.1);
+		myWorld->setEmitterGenRate(.01);
 		break;
 	/////////////////////////////////
 	case SDLK_u:

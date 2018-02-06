@@ -448,6 +448,15 @@ void World::turnEmitterOnOff()
 	particleEmitter->changeActive();
 }
 
+void World::deleteParticles()
+{
+	for (int i = 0; i < cur_num_particles; i++)
+	{
+		delete objArray[i];
+	}
+	cur_num_particles = 0;
+}
+
 /*----------------------------*/
 // PRIVATE FUNCTIONS
 /*----------------------------*/

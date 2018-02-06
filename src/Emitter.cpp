@@ -146,7 +146,6 @@ Particle * Emitter::generateParticle(int model_start, int model_verts, Camera * 
 		case BALL_EMITTER:
 			pos = generateRandomPos();
 			vel = Vec3D(-1 + .1 * (rand()%10), 0, -1 + .1 * (rand()%10));
-			//origin = Vec3D(0,5,0);
 			lifespan = 10;
 			acc = Vec3D(0,-9.8,0);
 			size = Vec3D(1.0,1.0,1.0);
@@ -154,7 +153,6 @@ Particle * Emitter::generateParticle(int model_start, int model_verts, Camera * 
 		case WATER_EMITTER:
 			pos = generateRandomPos();
 			vel = Vec3D(1 + .1 * (rand()%5), 5, .1 * (rand()%5));
-			//origin = Vec3D(0,5,0);
 			lifespan = 5 + (.1 * (rand()%5));
 			acc = Vec3D(0,-9.8,0);
 			size = Vec3D(.1,.1,.1);
@@ -162,14 +160,13 @@ Particle * Emitter::generateParticle(int model_start, int model_verts, Camera * 
 		case FIRE_EMITTER:
 			pos = generateRandomPos();
 			vel = Vec3D(0.0, 1.0, 0.0);
-			//origin = Vec3D(0,0.1,0);
 			lifespan = 5 + (.1 * (rand()%5));
 			acc = Vec3D((rand()%20 - 10)/50.0, 1.0e-4,(rand()%20 - 10)/50.0);
 			size = Vec3D(.1,.1,.1);
 			break;
 		case SPELL_EMITTER:
 			pos = cam->getPos() + cam->getDir() + .0014 * mouse_x * cam->getRight() - .0014 * mouse_y * cam->getUp();
-			vel = cam->getDir();
+			vel = 2 * cam->getDir();
 			lifespan = 5 + (.1 * (rand()%5));
 			acc = 0.1 * cam->getDir();
 			size = Vec3D(.1,.1,.1);
@@ -177,7 +174,6 @@ Particle * Emitter::generateParticle(int model_start, int model_verts, Camera * 
 		case DEFAULT_EMITTER:
 			pos = generateRandomPos();
 			vel = Vec3D(1 + .1 * (rand()%5), 5, .1 * (rand()%5));
-			//origin = Vec3D(0,5,0);
 			lifespan = 5 + (.1 * (rand()%5));
 			acc = Vec3D(0,-9.8,0);
 			size = Vec3D(.1,.1,.1);
