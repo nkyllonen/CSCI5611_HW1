@@ -378,6 +378,18 @@ void World::updateParticles(float dt, float cur_time)
 			float age = (cur_time - pp->getBirth()) / 1000.0 / pp->getLifespan();
 			newColor = particleEmitter->generateNewColor(age);
 
+			//play with fire particles
+			/*if (particleEmitter->getType() == FIRE_EMITTER)
+			{
+				//Vec3D a = 0.5*(Vec3D(0,1,0) - acc);
+				Vec3D a = Vec3D(0, 0.1 + pos.getY(), 0) - pos;
+				a.normalize();
+				a = 0.01 * a;
+				//cout << "a : ";
+				//a.print();
+				acc = acc + a;
+			}*/
+
 			if (particleEmitter->getType() == SNOW_EMITTER)
 			{
 				if (ran == i%500)
@@ -411,6 +423,7 @@ void World::updateParticles(float dt, float cur_time)
 
 			pp->setPos(temp_pos);
 			pp->setVel(temp_vel);
+			pp->setAcc(acc);
 			pp->setColor(newColor);
 
 			objArray[i] = pp;

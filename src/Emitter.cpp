@@ -171,9 +171,9 @@ Particle * Emitter::generateParticle(int model_start, int model_verts, Camera * 
 			break;
 		case FIRE_EMITTER:
 			pos = generateRandomPos();
-			vel = Vec3D(0.0, 1.0, 0.0);
-			lifespan = 7 + (.1 * (rand()%5));
-			acc = Vec3D((rand()%20 - 10)/50.0, 1.0e-4,(rand()%20 - 10)/50.0);
+			vel = Vec3D(0.0, 0.5, 0.0);
+			lifespan = 10 + (.1 * (rand()%5));
+			acc = Vec3D((rand()%20 - 10)/50.0, 0,(rand()%20 - 10)/50.0);
 			size = Vec3D(.1,.1,.1);
 			damping = -0.7;
 			break;
